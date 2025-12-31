@@ -1,0 +1,87 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+dist/
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+coverage.out
+coverage.html
+
+# Dependency directories
+vendor/
+
+# Go workspace file
+go.work
+
+# Environment variables and credentials
+.env
+.env.*
+!.env.example
+.checkmk-credentials
+
+# Generated Docker Compose files (use: python3 scripts/generate-compose.py -o docker-compose.yml)
+docker-compose.yml
+docker-compose.*.yml
+
+# Terraform files
+*.tfstate
+*.tfstate.*
+*.tfvars
+.terraform/
+.terraform.lock.hcl
+crash.log
+crash.*.log
+
+# OpenAPI cache files
+.openapi-cache/
+openapi/*.yaml
+openapi/*.json
+
+# Testing
+testdata/
+test-fixtures/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Credentials and secrets
+credentials.json
+auth/
+*.pem
+*.key
+
+# Build artifacts
+terraform-provider-checkmk
+terraform-provider-checkmk_*
+
+# Documentation build
+docs/_build/
+site/
+docs-dev/
+examples-dev/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# OpenAPI generated code
+.oapi-codegen.yaml
+scripts/fetch_openapi_specs.sh
+scripts/generate_client.sh
+scripts/generate_types.sh
+cmd/
+internal/client/generated
