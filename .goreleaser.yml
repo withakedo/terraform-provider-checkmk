@@ -49,6 +49,10 @@ signs:
     args:
       # Batch mode is required for CI environments (no interactive prompts)
       - "--batch"
+      - "--pinentry-mode"
+      - "loopback"
+      - "--passphrase"
+      - "{{ .Env.GPG_PASSPHRASE }}"
       - "--local-user"
       - "{{ .Env.GPG_FINGERPRINT }}"
       - "--output"
