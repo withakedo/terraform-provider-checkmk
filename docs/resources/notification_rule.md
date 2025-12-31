@@ -50,7 +50,7 @@ resource "checkmk_notification_rule" "pagerduty_escalation" {
   }
 
   notification_method = {
-    plugin_name   = "pagerduty"
+    plugin_name = "pagerduty"
     plugin_params = jsonencode({
       routing_key = {
         password_store_id = checkmk_password.pagerduty_key.id
@@ -86,7 +86,7 @@ resource "checkmk_notification_rule" "slack_critical" {
   }
 
   notification_method = {
-    plugin_name   = "slack"
+    plugin_name = "slack"
     plugin_params = jsonencode({
       webhook_url = {
         password_store_id = checkmk_password.slack_webhook.id
@@ -108,8 +108,8 @@ resource "checkmk_notification_rule" "slack_critical" {
 ```terraform
 # Notification rule with comprehensive conditions
 resource "checkmk_notification_rule" "business_hours_alerts" {
-  description  = "Business hours alerts for web services"
-  comment      = "Only notify during business hours for web-related services"
+  description   = "Business hours alerts for web services"
+  comment       = "Only notify during business hours for web-related services"
   allow_disable = true
   disabled      = false
 
@@ -122,7 +122,7 @@ resource "checkmk_notification_rule" "business_hours_alerts" {
   }
 
   notification_method = {
-    plugin_name   = "mail"
+    plugin_name = "mail"
     plugin_params = jsonencode({
       from_address = "monitoring@example.com"
       subject      = "[ALERT] $HOSTNAME$ - $SERVICEDESC$"

@@ -1,7 +1,7 @@
 # Notification rule with comprehensive conditions
 resource "checkmk_notification_rule" "business_hours_alerts" {
-  description  = "Business hours alerts for web services"
-  comment      = "Only notify during business hours for web-related services"
+  description   = "Business hours alerts for web services"
+  comment       = "Only notify during business hours for web-related services"
   allow_disable = true
   disabled      = false
 
@@ -14,7 +14,7 @@ resource "checkmk_notification_rule" "business_hours_alerts" {
   }
 
   notification_method = {
-    plugin_name   = "mail"
+    plugin_name = "mail"
     plugin_params = jsonencode({
       from_address = "monitoring@example.com"
       subject      = "[ALERT] $HOSTNAME$ - $SERVICEDESC$"

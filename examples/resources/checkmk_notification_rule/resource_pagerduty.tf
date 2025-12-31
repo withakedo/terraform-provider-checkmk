@@ -8,7 +8,7 @@ resource "checkmk_notification_rule" "pagerduty_escalation" {
   }
 
   notification_method = {
-    plugin_name   = "pagerduty"
+    plugin_name = "pagerduty"
     plugin_params = jsonencode({
       routing_key = {
         password_store_id = checkmk_password.pagerduty_key.id

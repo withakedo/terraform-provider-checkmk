@@ -89,8 +89,8 @@ variable "network_password" {
 - `comment` (String) Optional comment for the password.
 - `customer_id` (String) Customer ID (only relevant for managed services edition).
 - `documentation_url` (String) Optional URL to documentation for this password.
-- `editable_by` (List of String) List of contact group names that have edit access to this password.
-- `owner` (String) Owner of the password. Defaults to 'admin'.
+- `editable_by` (String) Contact group name that has edit access to this password. Defaults to 'admin' if neither owner nor editable_by is set.
+- `owner` (String, Deprecated) Deprecated: use editable_by instead. Owner of the password.
 - `share_with` (List of String) List of contact group names that have read access to this password.
 - `strict_resource_locking` (Boolean) Override provider-level strict_resource_locking for this resource. Controls ETag validation for resource operations. If not set, uses provider configuration.
 

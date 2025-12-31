@@ -44,8 +44,8 @@ resource "checkmk_host" "app_server" {
 
     # Custom attributes for ITSM integration
     device_description = "Production web application server"
-    snowgroup          = "platform-team"     # ServiceNow assignment group
-    snowservice        = "web-application"   # ServiceNow service
+    snowgroup          = "platform-team"   # ServiceNow assignment group
+    snowservice        = "web-application" # ServiceNow service
   }
 }
 
@@ -62,8 +62,8 @@ resource "checkmk_host" "managed_device" {
     device_description = "Office access switch"
 
     # These can be modified via UI without causing drift
-    notes       = "Initial configuration"
-    proxy_port  = "8080"
+    notes      = "Initial configuration"
+    proxy_port = "8080"
   }
 
   lifecycle {
@@ -132,6 +132,6 @@ resource "checkmk_host" "dynamic_attrs" {
       alias     = "Dynamic Host"
       ipaddress = "10.0.4.100"
     },
-    var.device_metadata  # Merge in custom attributes from variable
+    var.device_metadata # Merge in custom attributes from variable
   )
 }

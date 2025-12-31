@@ -31,12 +31,12 @@ resource "checkmk_password" "api_token" {
 
 # Password with ownership and sharing
 resource "checkmk_password" "shared_credential" {
-  password_id      = "shared_db_password"
-  title            = "Shared Database Password"
-  password         = "supersecret123"
-  owner            = "admin"
+  password_id       = "shared_db_password"
+  title             = "Shared Database Password"
+  password          = "supersecret123"
+  owner             = "admin"
   documentation_url = "https://wiki.example.com/db-credentials"
-  comment          = "Production database credentials"
+  comment           = "Production database credentials"
 }
 
 # Password with contact group permissions
@@ -56,7 +56,7 @@ resource "checkmk_password" "network_credential" {
   password    = "networkpass456"
   owner       = "admin"
   editable_by = [checkmk_contact_group.network_ops.name]
-  share_with  = [
+  share_with = [
     checkmk_contact_group.network_ops.name,
     checkmk_contact_group.cloud_team.name
   ]

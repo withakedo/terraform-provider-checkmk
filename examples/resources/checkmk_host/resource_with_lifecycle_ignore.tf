@@ -32,9 +32,9 @@ resource "checkmk_host" "managed_host" {
 
     # Initial values for click-ops attributes
     # These can be changed in the UI without causing drift
-    site            = "site1"
-    snmp_community  = "public"
-    tag_snmp_ds     = "snmp-v2"
+    site           = "site1"
+    snmp_community = "public"
+    tag_snmp_ds    = "snmp-v2"
   }
 
   # Ignore changes to operational attributes that may be modified via UI

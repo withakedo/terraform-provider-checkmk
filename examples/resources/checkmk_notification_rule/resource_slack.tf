@@ -8,7 +8,7 @@ resource "checkmk_notification_rule" "slack_critical" {
   }
 
   notification_method = {
-    plugin_name   = "slack"
+    plugin_name = "slack"
     plugin_params = jsonencode({
       webhook_url = {
         password_store_id = checkmk_password.slack_webhook.id

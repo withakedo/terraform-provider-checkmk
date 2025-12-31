@@ -113,15 +113,15 @@ resource "checkmk_rule" "filesystem_thresholds" {
 
   # Complex rule values require topython()
   value_raw = provider::checkmk::topython({
-    levels          = [80.0, 90.0]
-    magic_normsize  = 20
-    levels_low      = [50.0, 60.0]
-    trend_range     = 24
-    trend_perfdata  = true
-    show_levels     = "onmagic"
-    inodes_levels   = [10.0, 5.0]
-    show_inodes     = "onlow"
-    show_reserved   = false
+    levels         = [80.0, 90.0]
+    magic_normsize = 20
+    levels_low     = [50.0, 60.0]
+    trend_range    = 24
+    trend_perfdata = true
+    show_levels    = "onmagic"
+    inodes_levels  = [10.0, 5.0]
+    show_inodes    = "onlow"
+    show_reserved  = false
   })
 
   properties = {

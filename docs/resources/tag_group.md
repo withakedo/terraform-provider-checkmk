@@ -163,4 +163,4 @@ Required:
 
 Optional:
 
-- `aux_tags` (List of String) List of auxiliary tag IDs associated with this tag. Optional.
+- `aux_tags` (List of String) List of auxiliary tag IDs associated with this tag. Optional, defaults to empty list.

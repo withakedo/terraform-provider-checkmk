@@ -59,8 +59,8 @@ resource "checkmk_tag_group" "agent_type" {
       aux_tags = [checkmk_aux_tag.snmp_checks.id]
     },
     {
-      id       = "dual"
-      title    = "Agent + SNMP"
+      id    = "dual"
+      title = "Agent + SNMP"
       aux_tags = [
         checkmk_aux_tag.tcp_checks.id,
         checkmk_aux_tag.snmp_checks.id
