@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_service_labels Resource - terraform-provider-checkmk"
+page_title: "checkmk_service_labels Resource - checkmk"
 subcategory: "Rules - Services"
 description: |-
   Assigns labels to services matching specified conditions. This is a typed wrapper around the `service_label_rules` ruleset. Requires activation.

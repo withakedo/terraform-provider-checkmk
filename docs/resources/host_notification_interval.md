@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_host_notification_interval Resource - terraform-provider-checkmk"
+page_title: "checkmk_host_notification_interval Resource - checkmk"
 subcategory: "Rules - Hosts"
 description: |-
   Sets the interval between repeated notifications for hosts. This is a typed wrapper around the `extra_host_conf:notification_interval` ruleset. Requires activation.

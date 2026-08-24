@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_service_notification_options Resource - terraform-provider-checkmk"
+page_title: "checkmk_service_notification_options Resource - checkmk"
 subcategory: "Rules - Services"
 description: |-
   Sets which service state changes trigger notifications. This is a typed wrapper around the `extra_service_conf:notification_options` ruleset. Requires activation.

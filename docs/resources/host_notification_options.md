@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_host_notification_options Resource - terraform-provider-checkmk"
+page_title: "checkmk_host_notification_options Resource - checkmk"
 subcategory: "Rules - Hosts"
 description: |-
   Sets which host state changes trigger notifications. This is a typed wrapper around the `extra_host_conf:notification_options` ruleset. Requires activation.

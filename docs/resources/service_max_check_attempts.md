@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_service_max_check_attempts Resource - terraform-provider-checkmk"
+page_title: "checkmk_service_max_check_attempts Resource - checkmk"
 subcategory: "Rules - Services"
 description: |-
   Sets the maximum check attempts for services before changing state to hard. This is a typed wrapper around the `extra_service_conf:max_check_attempts` ruleset. Requires activation.

@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_service_notifications_enabled Resource - terraform-provider-checkmk"
+page_title: "checkmk_service_notifications_enabled Resource - checkmk"
 subcategory: "Rules - Services"
 description: |-
   Enables or disables notifications for services. This is a typed wrapper around the `extra_service_conf:notifications_enabled` ruleset. Requires activation.

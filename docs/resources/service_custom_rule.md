@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_service_custom_rule Resource - terraform-provider-checkmk"
+page_title: "checkmk_service_custom_rule Resource - checkmk"
 subcategory: "Rules - Services"
 description: |-
   Defines a custom check command for services matching specified conditions. This is a typed wrapper around the `custom_checks` ruleset. Requires activation.

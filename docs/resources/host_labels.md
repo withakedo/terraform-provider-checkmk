@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_host_labels Resource - terraform-provider-checkmk"
+page_title: "checkmk_host_labels Resource - checkmk"
 subcategory: "Rules - Hosts"
 description: |-
   Assigns labels to hosts matching specified conditions. This is a typed wrapper around the `host_label_rules` ruleset. Requires activation.

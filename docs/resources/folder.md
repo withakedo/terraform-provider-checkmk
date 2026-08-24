@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_folder Resource - terraform-provider-checkmk"
+page_title: "checkmk_folder Resource - checkmk"
 subcategory: "Hosts & Folders"
 description: |-
   Manages a folder in CheckMK. Folders provide hierarchical organization for hosts and support attribute inheritance.

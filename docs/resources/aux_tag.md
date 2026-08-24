@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_aux_tag Resource - terraform-provider-checkmk"
+page_title: "checkmk_aux_tag Resource - checkmk"
 subcategory: "Configuration"
 description: |-
   Manages a CheckMK auxiliary tag configuration. Auxiliary tags do not require activation.

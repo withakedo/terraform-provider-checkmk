@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_rule Resource - terraform-provider-checkmk"
+page_title: "checkmk_rule Resource - checkmk"
 subcategory: "Rules"
 description: |-
   Manages a CheckMK rule. Rules control monitoring behavior through conditions and values. Requires activation. **Important:** Label rulesets (host_label_rules, service_label_rules) cannot use label conditions to avoid circular dependencies.

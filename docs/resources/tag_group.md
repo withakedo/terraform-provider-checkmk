@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_tag_group Resource - terraform-provider-checkmk"
+page_title: "checkmk_tag_group Resource - checkmk"
 subcategory: "Configuration"
 description: |-
   Manages a CheckMK host tag group configuration. Tag groups do not require activation.

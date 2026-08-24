@@ -143,6 +143,8 @@ Simplified interfaces for common rule types:
 | Resource | Description |
 |----------|-------------|
 | `checkmk_activation` | Explicit activation checkpoint for staged changes |
+| `checkmk_service_discovery` | Triggers service discovery for a host |
+| `checkmk_downtime` | Schedules a host or service maintenance window |
 
 ## Quick Start
 
@@ -249,6 +251,14 @@ it) is updated.
 - **Single-site only** - Distributed monitoring with multiple sites is not yet supported.
 - **No bulk operations** - Each resource is created/updated individually; bulk host creation is not implemented.
 - **Activation scope** - Activation applies to all pending changes, not just Terraform-managed resources.
+- **Service discovery is not re-readable** - `checkmk_service_discovery` triggers a discovery run and records its
+  result, but (like `checkmk_activation`) has no persistent server-side object to read back; drift in a host's
+  discovered services is not detected automatically. Re-run `terraform apply` to re-trigger discovery.
+- **Downtimes: host and service only, no in-place modify** - `checkmk_downtime` supports `host` and `service`
+  downtime types; `hostgroup`, `servicegroup`, and query-based downtimes are not yet implemented. Every attribute
+  forces replacement on change, since CheckMK's downtime create endpoints don't return a lookup-friendly id to
+  target with the separate "modify downtime" endpoint. Deleting the resource cancels the downtime by host/service
+  parameters rather than by CheckMK's internal downtime id.
 
 ### Version Differences
 - **Schema variations** - Some attributes are only available in certain CheckMK versions. The provider accepts all attributes but the API may reject version-incompatible values.
@@ -292,6 +302,7 @@ EOF
 
 ## Documentation
 
+- [CHANGELOG](CHANGELOG.md) - notable changes to this provider
 - [CheckMK REST API Documentation](https://docs.checkmk.com/latest/en/rest_api.html)
 - [Terraform Plugin Framework](https://developer.hashicorp.com/terraform/plugin/framework)
 - [checkmk-api-spec Repository](https://github.com/BlackMesaLTD/checkmk-api-spec) - Generated types and version mappings

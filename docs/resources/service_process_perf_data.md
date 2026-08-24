@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_service_process_perf_data Resource - terraform-provider-checkmk"
+page_title: "checkmk_service_process_perf_data Resource - checkmk"
 subcategory: "Rules - Services"
 description: |-
   Enables or disables performance data processing for services. This is a typed wrapper around the `extra_service_conf:process_perf_data` ruleset. Requires activation.

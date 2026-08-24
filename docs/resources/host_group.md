@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_host_group Resource - terraform-provider-checkmk"
+page_title: "checkmk_host_group Resource - checkmk"
 subcategory: "Groups"
 description: |-
   Manages a CheckMK host group. Host groups provide logical grouping of hosts independent of folder hierarchy. Does not require activation.

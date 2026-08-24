@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_service_retry_interval Resource - terraform-provider-checkmk"
+page_title: "checkmk_service_retry_interval Resource - checkmk"
 subcategory: "Rules - Services"
 description: |-
   Sets the retry interval for services in soft state. This is a typed wrapper around the `extra_service_conf:retry_interval` ruleset. Requires activation.

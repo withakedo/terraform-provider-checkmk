@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_service_notification_period Resource - terraform-provider-checkmk"
+page_title: "checkmk_service_notification_period Resource - checkmk"
 subcategory: "Rules - Services"
 description: |-
   Sets the notification period for services matching specified conditions. This is a typed wrapper around the `extra_service_conf:notification_period` ruleset. Requires activation.

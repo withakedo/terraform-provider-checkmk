@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_time_period Resource - terraform-provider-checkmk"
+page_title: "checkmk_time_period Resource - checkmk"
 subcategory: "Configuration"
 description: |-
   Manages a CheckMK time period. Time periods define when notifications and checks are active. Requires activation.

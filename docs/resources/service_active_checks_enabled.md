@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_service_active_checks_enabled Resource - terraform-provider-checkmk"
+page_title: "checkmk_service_active_checks_enabled Resource - checkmk"
 subcategory: "Rules - Services"
 description: |-
   Enables or disables active checks for services. This is a typed wrapper around the `extra_service_conf:active_checks_enabled` ruleset. Requires activation.

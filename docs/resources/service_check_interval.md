@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_service_check_interval Resource - terraform-provider-checkmk"
+page_title: "checkmk_service_check_interval Resource - checkmk"
 subcategory: "Rules - Services"
 description: |-
   Sets the check interval for services matching specified conditions. This is a typed wrapper around the `extra_service_conf:check_interval` ruleset. Requires activation.

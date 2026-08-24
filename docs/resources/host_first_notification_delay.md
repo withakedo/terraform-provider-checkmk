@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_host_first_notification_delay Resource - terraform-provider-checkmk"
+page_title: "checkmk_host_first_notification_delay Resource - checkmk"
 subcategory: "Rules - Hosts"
 description: |-
   Sets the delay before the first notification for hosts. This is a typed wrapper around the `extra_host_conf:first_notification_delay` ruleset. Requires activation.

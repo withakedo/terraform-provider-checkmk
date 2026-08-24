@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_password Resource - terraform-provider-checkmk"
+page_title: "checkmk_password Resource - checkmk"
 subcategory: "Users & Contacts"
 description: |-
   Manages a CheckMK password. Passwords are stored credentials that can be used for various integrations. Does not require activation.

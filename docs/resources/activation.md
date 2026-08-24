@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_activation Resource - terraform-provider-checkmk"
+page_title: "checkmk_activation Resource - checkmk"
 subcategory: "Configuration"
 description: |-
   Triggers activation of pending CheckMK configuration changes.

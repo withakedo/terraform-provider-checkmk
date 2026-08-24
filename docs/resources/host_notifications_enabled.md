@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_host_notifications_enabled Resource - terraform-provider-checkmk"
+page_title: "checkmk_host_notifications_enabled Resource - checkmk"
 subcategory: "Rules - Hosts"
 description: |-
   Enables or disables notifications for hosts. This is a typed wrapper around the `extra_host_conf:notifications_enabled` ruleset. Requires activation.

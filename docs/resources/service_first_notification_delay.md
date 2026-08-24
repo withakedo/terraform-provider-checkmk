@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_service_first_notification_delay Resource - terraform-provider-checkmk"
+page_title: "checkmk_service_first_notification_delay Resource - checkmk"
 subcategory: "Rules - Services"
 description: |-
   Sets the delay before the first notification for services. This is a typed wrapper around the `extra_service_conf:first_notification_delay` ruleset. Requires activation.

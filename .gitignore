@@ -86,3 +86,5 @@ scripts/generate_client.sh
 scripts/generate_types.sh
 cmd/
 internal/client/generated
+# Local Claude Code CLI session state
+.claude/

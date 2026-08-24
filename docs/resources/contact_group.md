@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_contact_group Resource - terraform-provider-checkmk"
+page_title: "checkmk_contact_group Resource - checkmk"
 subcategory: "Users & Contacts"
 description: |-
   Manages a CheckMK contact group configuration. Contact groups do not require activation.

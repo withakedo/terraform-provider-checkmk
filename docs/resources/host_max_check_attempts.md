@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_host_max_check_attempts Resource - terraform-provider-checkmk"
+page_title: "checkmk_host_max_check_attempts Resource - checkmk"
 subcategory: "Rules - Hosts"
 description: |-
   Sets the maximum check attempts for hosts before changing state to hard. This is a typed wrapper around the `extra_host_conf:max_check_attempts` ruleset. Requires activation.

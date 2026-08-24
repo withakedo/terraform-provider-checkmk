@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_service_check_period Resource - terraform-provider-checkmk"
+page_title: "checkmk_service_check_period Resource - checkmk"
 subcategory: "Rules - Services"
 description: |-
   Sets the check period for services. This is a typed wrapper around the `extra_service_conf:check_period` ruleset. Requires activation.

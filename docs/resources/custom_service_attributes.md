@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_custom_service_attributes Resource - terraform-provider-checkmk"
+page_title: "checkmk_custom_service_attributes Resource - checkmk"
 subcategory: "Rules - Services"
 description: |-
   Sets custom attributes for services. This is a typed wrapper around the `custom_service_attributes` ruleset. Requires activation.

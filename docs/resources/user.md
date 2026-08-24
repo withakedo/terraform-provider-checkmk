@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_user Resource - terraform-provider-checkmk"
+page_title: "checkmk_user Resource - checkmk"
 subcategory: "Users & Contacts"
 description: |-
   Manages a CheckMK user. Users can authenticate via password or automation secret. Does not require activation.

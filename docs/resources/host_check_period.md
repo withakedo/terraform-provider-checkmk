@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_host_check_period Resource - terraform-provider-checkmk"
+page_title: "checkmk_host_check_period Resource - checkmk"
 subcategory: "Rules - Hosts"
 description: |-
   Sets the check period for hosts. This is a typed wrapper around the `extra_host_conf:check_period` ruleset. Requires activation.

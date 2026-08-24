@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_host Resource - terraform-provider-checkmk"
+page_title: "checkmk_host Resource - checkmk"
 subcategory: "Hosts & Folders"
 description: |-
   Manages a CheckMK host configuration.

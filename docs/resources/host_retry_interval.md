@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_host_retry_interval Resource - terraform-provider-checkmk"
+page_title: "checkmk_host_retry_interval Resource - checkmk"
 subcategory: "Rules - Hosts"
 description: |-
   Sets the retry interval for hosts in soft state. This is a typed wrapper around the `extra_host_conf:retry_interval` ruleset. Requires activation.

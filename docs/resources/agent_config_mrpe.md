@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_agent_config_mrpe Resource - terraform-provider-checkmk"
+page_title: "checkmk_agent_config_mrpe Resource - checkmk"
 subcategory: "Monitoring"
 description: |-
   Configures MRPE (MK's Remote Plugin Executor) checks for the CheckMK agent. This is a typed wrapper around the `agent_config:mrpe` ruleset. Requires activation and agent baking.

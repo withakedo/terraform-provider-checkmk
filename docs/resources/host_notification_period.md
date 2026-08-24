@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_host_notification_period Resource - terraform-provider-checkmk"
+page_title: "checkmk_host_notification_period Resource - checkmk"
 subcategory: "Rules - Hosts"
 description: |-
   Sets the notification period for hosts matching specified conditions. This is a typed wrapper around the `extra_host_conf:notification_period` ruleset. Requires activation.

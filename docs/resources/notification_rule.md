@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_notification_rule Resource - terraform-provider-checkmk"
+page_title: "checkmk_notification_rule Resource - checkmk"
 subcategory: "Rules"
 description: |-
   Manages a CheckMK notification rule. Notification rules control how and when alerts are sent to contacts. Requires activation. Available in CheckMK 2.2.0p5+.

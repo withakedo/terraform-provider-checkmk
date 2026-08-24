@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_host_check_interval Resource - terraform-provider-checkmk"
+page_title: "checkmk_host_check_interval Resource - checkmk"
 subcategory: "Rules - Hosts"
 description: |-
   Sets the check interval for hosts matching specified conditions. This is a typed wrapper around the `extra_host_conf:check_interval` ruleset. Requires activation.

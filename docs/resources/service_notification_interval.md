@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_service_notification_interval Resource - terraform-provider-checkmk"
+page_title: "checkmk_service_notification_interval Resource - checkmk"
 subcategory: "Rules - Services"
 description: |-
   Sets the interval between repeated notifications for services. This is a typed wrapper around the `extra_service_conf:notification_interval` ruleset. Requires activation.

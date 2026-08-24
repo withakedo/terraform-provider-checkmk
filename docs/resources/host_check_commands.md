@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_host_check_commands Resource - terraform-provider-checkmk"
+page_title: "checkmk_host_check_commands Resource - checkmk"
 subcategory: "Rules - Hosts"
 description: |-
   Sets the host check command. This is a typed wrapper around the `host_check_commands` ruleset. Requires activation.

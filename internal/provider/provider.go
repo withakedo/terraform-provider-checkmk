@@ -359,6 +359,8 @@ func (p *checkmkProvider) Resources(_ context.Context) []func() resource.Resourc
 
 	// Add provider-level resources
 	resources = append(resources, NewActivationResource)
+	resources = append(resources, NewServiceDiscoveryResource)
+	resources = append(resources, NewDowntimeResource)
 
 	// Add resources from each package
 	resources = append(resources, configuration.Resources()...)

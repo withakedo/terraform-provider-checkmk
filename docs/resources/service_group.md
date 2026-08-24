@@ -1,5 +1,5 @@
 ---
-page_title: "checkmk_service_group Resource - terraform-provider-checkmk"
+page_title: "checkmk_service_group Resource - checkmk"
 subcategory: "Groups"
 description: |-
   Manages a CheckMK service group. Service groups provide logical grouping of services for rules and reporting. Does not require activation.
