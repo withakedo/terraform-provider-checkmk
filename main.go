@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 
-	"github.com/terraform-provider-checkmk/internal/provider"
+	"github.com/withakedo/terraform_checkmk_provider/internal/provider"
 )
 
 // Run "go generate" to format example terraform files and generate the docs for the registry/website
@@ -36,7 +36,7 @@ func main() {
 	flag.Parse()
 
 	opts := providerserver.ServeOpts{
-		Address: "registry.terraform.io/blackmesaltd/checkmk",
+		Address: "registry.terraform.io/withake-it/checkmk",
 		Debug:   debug,
 	}
 

@@ -37,6 +37,18 @@ func TestNewVersionedTypes(t *testing.T) {
 			wantBase: "v2_4_0",
 		},
 		{
+			name:     "2.5.0p10 supported (exact baseline)",
+			version:  "2.5.0p10",
+			wantNil:  false,
+			wantBase: "v2_5_0",
+		},
+		{
+			name:     "2.5.0p12 supported (falls back to latest known 2.5 baseline)",
+			version:  "2.5.0p12",
+			wantNil:  false,
+			wantBase: "v2_5_0",
+		},
+		{
 			name:    "unsupported version",
 			version: "1.0.0",
 			wantNil: true,

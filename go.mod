@@ -1,4 +1,4 @@
-module github.com/terraform-provider-checkmk
+module github.com/withakedo/terraform_checkmk_provider
 
 go 1.24.1
 
@@ -6,7 +6,7 @@ go 1.24.1
 // replace github.com/BlackMesaLTD/checkmk-api-spec => ../checkmk-api-spec
 
 require (
-	github.com/BlackMesaLTD/checkmk-api-spec v0.0.5
+	github.com/BlackMesaLTD/checkmk-api-spec v0.0.11
 	github.com/hashicorp/terraform-plugin-docs v0.24.0
 	github.com/hashicorp/terraform-plugin-framework v1.17.0
 	github.com/hashicorp/terraform-plugin-go v0.29.0

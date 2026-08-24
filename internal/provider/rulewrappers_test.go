@@ -8,7 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
-	"github.com/terraform-provider-checkmk/internal/client"
+	"github.com/withakedo/terraform_checkmk_provider/internal/client"
 )
 
 // TestAccHostCheckIntervalResource tests the checkmk_host_check_interval resource

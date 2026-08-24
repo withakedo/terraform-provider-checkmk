@@ -38,6 +38,7 @@ VERSIONS = {
     "2.2": {"full": "2.2.0p47", "port_offset": 20},
     "2.3": {"full": "2.3.0p48", "port_offset": 30},
     "2.4": {"full": "2.4.0p32", "port_offset": 40},
+    "2.5": {"full": "2.5.0p12", "port_offset": 50},
 }
 
 # Docker registry URLs by edition

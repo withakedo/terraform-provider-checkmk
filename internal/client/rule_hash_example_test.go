@@ -3,7 +3,7 @@ package client_test
 import (
 	"fmt"
 
-	"github.com/terraform-provider-checkmk/internal/client"
+	"github.com/withakedo/terraform_checkmk_provider/internal/client"
 )
 
 // Example demonstrates basic rule hashing

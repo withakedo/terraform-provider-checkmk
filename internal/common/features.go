@@ -1,6 +1,6 @@
 package common
 
-import "github.com/terraform-provider-checkmk/internal/client"
+import "github.com/withakedo/terraform_checkmk_provider/internal/client"
 
 // Features represents version-dependent feature flags
 // These flags control which API endpoints and features are available

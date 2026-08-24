@@ -12,15 +12,15 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/terraform-provider-checkmk/internal/client"
-	"github.com/terraform-provider-checkmk/internal/common"
-	"github.com/terraform-provider-checkmk/internal/configuration"
-	"github.com/terraform-provider-checkmk/internal/groups"
-	"github.com/terraform-provider-checkmk/internal/hosts"
-	"github.com/terraform-provider-checkmk/internal/labels"
-	"github.com/terraform-provider-checkmk/internal/rules"
-	"github.com/terraform-provider-checkmk/internal/rules/wrappers"
-	"github.com/terraform-provider-checkmk/internal/users"
+	"github.com/withakedo/terraform_checkmk_provider/internal/client"
+	"github.com/withakedo/terraform_checkmk_provider/internal/common"
+	"github.com/withakedo/terraform_checkmk_provider/internal/configuration"
+	"github.com/withakedo/terraform_checkmk_provider/internal/groups"
+	"github.com/withakedo/terraform_checkmk_provider/internal/hosts"
+	"github.com/withakedo/terraform_checkmk_provider/internal/labels"
+	"github.com/withakedo/terraform_checkmk_provider/internal/rules"
+	"github.com/withakedo/terraform_checkmk_provider/internal/rules/wrappers"
+	"github.com/withakedo/terraform_checkmk_provider/internal/users"
 )
 
 // Ensure the implementation satisfies the expected interfaces.
@@ -137,7 +137,7 @@ func (p *checkmkProvider) Schema(_ context.Context, _ provider.SchemaRequest, re
 			},
 			"type_mode": schema.StringAttribute{
 				Description: "Type validation mode (default: 'auto'). " +
-					"'auto': Use static types for known versions (2.2, 2.3, 2.4), fall back to hollow with warning for unknown. " +
+					"'auto': Use static types for known versions (2.2, 2.3, 2.4, 2.5), fall back to hollow with warning for unknown. " +
 					"'static': Use static types for known versions, fail with error for unknown versions. " +
 					"'hollow': Accept any attributes and rely on the API for validation.",
 				Optional: true,
@@ -300,7 +300,7 @@ func (p *checkmkProvider) Configure(ctx context.Context, req provider.ConfigureR
 				resp.Diagnostics.AddError(
 					"Unsupported CheckMK Version",
 					fmt.Sprintf("CheckMK version %s is not in the list of supported versions. "+
-						"Supported versions: 2.2.0p1 through 2.4.0p18. "+
+						"Supported versions: 2.2.x, 2.3.x, 2.4.x, and 2.5.x. "+
 						"To use this version, set type_mode = \"hollow\" in provider configuration.",
 						c.Version.String()),
 				)

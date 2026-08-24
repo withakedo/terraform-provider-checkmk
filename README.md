@@ -2,10 +2,18 @@
 
 A Terraform provider for managing [CheckMK](https://checkmk.com/) monitoring infrastructure as code using the CheckMK REST API.
 
+Maintained by [Withake-IT](https://withake-it.de).
+
+> **Fork notice:** This project is a fork of [BlackMesaLTD/terraform-provider-checkmk](https://github.com/BlackMesaLTD/terraform-provider-checkmk),
+> licensed under the [Mozilla Public License 2.0](LICENSE). It continues development independently under
+> [withakedo/terraform_checkmk_provider](https://github.com/withakedo/terraform_checkmk_provider), including
+> ongoing compatibility updates for newer CheckMK releases. All credit for the original implementation goes to
+> the upstream authors.
+
 ## Features
 
 - **Full CRUD operations** for hosts, folders, users, rules, and more
-- **Version-aware API handling** - automatically adapts to CheckMK 2.2.x, 2.3.x, and 2.4.x differences
+- **Version-aware API handling** - automatically adapts to CheckMK 2.2.x, 2.3.x, 2.4.x, and 2.5.x differences
 - **Plan-time validation** - field names and enum values validated during `terraform plan` using version-specific types
 - **OpenAPI-driven type safety** - field validation based on actual CheckMK API schemas
 - **Optimistic locking** - ETag-based concurrency control prevents conflicting updates
@@ -30,7 +38,7 @@ The `checkmk-api-spec` repository provides:
 ## Requirements
 
 - **Terraform**: >= 1.0
-- **CheckMK**: 2.2.x, 2.3.x, or 2.4.x with REST API enabled
+- **CheckMK**: 2.2.x, 2.3.x, 2.4.x, or 2.5.x with REST API enabled
 - **Go**: >= 1.21 (for development only)
 
 ## Installation
@@ -39,7 +47,7 @@ The `checkmk-api-spec` repository provides:
 terraform {
   required_providers {
     checkmk = {
-      source  = "blackmesaltd/checkmk"
+      source  = "withake-it/checkmk"
       version = "~> 0.1"
     }
   }
@@ -206,11 +214,20 @@ resource "checkmk_activation" "deploy" {
 
 | CheckMK Version | Support Status |
 |-----------------|----------------|
+| 2.5.x | Fully supported |
 | 2.4.x | Fully supported |
 | 2.3.x | Fully supported |
 | 2.2.x | Fully supported |
 
-The provider automatically detects the CheckMK version and adjusts API calls accordingly.
+The provider automatically detects the CheckMK version and adjusts API calls accordingly. Type
+validation relies on generated types from
+[checkmk-api-spec](https://github.com/BlackMesaLTD/checkmk-api-spec), which ships baseline types
+for specific patch releases per minor version; unlisted patch releases automatically fall back to
+the newest known baseline for that minor version. If you connect to a CheckMK version newer than
+any known baseline (e.g. a brand new minor release), the provider falls back to `type_mode =
+"hollow"` with a warning instead of failing - resources are still fully functional, just without
+plan-time field/enum validation until the companion spec repo (and this provider's dependency on
+it) is updated.
 
 ## Current Limitations
 
@@ -266,7 +283,7 @@ go test -v ./internal/provider -timeout 30m
 cat >> ~/.terraformrc <<EOF
 provider_installation {
   dev_overrides {
-    "blackmesaltd/checkmk" = "/path/to/terraform-provider-checkmk"
+    "withake-it/checkmk" = "/path/to/terraform-provider-checkmk"
   }
   direct {}
 }

@@ -16,9 +16,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/terraform-provider-checkmk/internal/client"
-	"github.com/terraform-provider-checkmk/internal/common"
-	"github.com/terraform-provider-checkmk/internal/rules"
+	"github.com/withakedo/terraform_checkmk_provider/internal/client"
+	"github.com/withakedo/terraform_checkmk_provider/internal/common"
+	"github.com/withakedo/terraform_checkmk_provider/internal/rules"
 )
 
 // LabelResourceModel is the shared data model for all label resources.

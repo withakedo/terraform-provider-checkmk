@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     checkmk = {
-      source = "blackmesaltd/checkmk"
+      source = "withake-it/checkmk"
     }
   }
 }
@@ -12,7 +12,7 @@ terraform {
 # against the CheckMK API schema before sending requests.
 #
 # Available modes:
-#   "auto"   - (Default) Use static types for known CheckMK versions (2.2, 2.3, 2.4).
+#   "auto"   - (Default) Use static types for known CheckMK versions (2.2, 2.3, 2.4, 2.5).
 #              Falls back to hollow mode with a warning for unknown versions.
 #   "static" - Use static types for known versions. Fails with an error if the
 #              CheckMK version is not recognized. Use this when you want to ensure

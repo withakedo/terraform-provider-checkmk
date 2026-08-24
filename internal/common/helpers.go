@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/terraform-provider-checkmk/internal/client"
+	"github.com/withakedo/terraform_checkmk_provider/internal/client"
 )
 
 // ConfigureResource extracts provider data and returns it, or adds an error to diagnostics.

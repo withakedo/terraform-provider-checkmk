@@ -51,7 +51,7 @@ while [[ $# -gt 0 ]]; do
             echo "Usage: $0 [OPTIONS]"
             echo ""
             echo "Options:"
-            echo "  --version, -v VERSION   Run tests against specific version (2.2, 2.3, 2.4)"
+            echo "  --version, -v VERSION   Run tests against specific version (2.2, 2.3, 2.4, 2.5)"
             echo "  --all, -a               Run tests against all versions"
             echo "  --package, -p PACKAGE   Run specific package tests (default: ./...)"
             echo "  --verbose               Show verbose output"
@@ -72,8 +72,8 @@ get_credentials() {
     local version=$1
 
     # Find container by checking running containers
-    # Local mode: checkmk-2.2.0p43, checkmk-2.3.0p41, checkmk-2.4.0p17
-    # CI mode:    checkmk-ci-2.2.0p43, checkmk-ci-2.3.0p41, checkmk-ci-2.4.0p17
+    # Local mode: checkmk-2.2.0p43, checkmk-2.3.0p41, checkmk-2.4.0p17, checkmk-2.5.0p12
+    # CI mode:    checkmk-ci-2.2.0p43, checkmk-ci-2.3.0p41, checkmk-ci-2.4.0p17, checkmk-ci-2.5.0p12
     local container
     container=$(docker ps --filter "health=healthy" --format '{{.Names}}' | grep -E "checkmk(-ci)?-${version}\." | head -1)
 
@@ -232,7 +232,7 @@ fi
 # Detect available versions from running containers
 echo -n "Detecting available versions... "
 AVAILABLE=""
-for v in 2.2 2.3 2.4; do
+for v in 2.2 2.3 2.4 2.5; do
     if get_credentials "$v" >/dev/null 2>&1; then
         AVAILABLE="$AVAILABLE $v"
     fi
