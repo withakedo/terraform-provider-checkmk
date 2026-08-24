@@ -42,7 +42,7 @@ func main() {
 	flag.Parse()
 
 	opts := providerserver.ServeOpts{
-		Address: "registry.terraform.io/withake-it/checkmk",
+		Address: "registry.terraform.io/withakedo/checkmk",
 		Debug:   debug,
 	}
 

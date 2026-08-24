@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     checkmk = {
-      source = "withake-it/checkmk"
+      source = "withakedo/checkmk"
     }
   }
 }

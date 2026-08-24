@@ -51,7 +51,7 @@ perpetual diff; if that happens, add the defaulted fields explicitly to your con
 terraform {
   required_providers {
     checkmk = {
-      source = "withake-it/checkmk"
+      source = "withakedo/checkmk"
     }
   }
 }

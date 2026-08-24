@@ -20,7 +20,7 @@ CheckMK UI, by another automation, or by `checkmk_downtime` resources managed el
 terraform {
   required_providers {
     checkmk = {
-      source = "withake-it/checkmk"
+      source = "withakedo/checkmk"
     }
   }
 }

@@ -51,7 +51,7 @@ diff; if that happens, add the defaulted fields explicitly to your configuration
 terraform {
   required_providers {
     checkmk = {
-      source = "withake-it/checkmk"
+      source = "withakedo/checkmk"
     }
   }
 }

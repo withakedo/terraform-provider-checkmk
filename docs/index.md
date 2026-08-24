@@ -15,7 +15,7 @@ Interact with CheckMK monitoring system.
 terraform {
   required_providers {
     checkmk = {
-      source = "withake-it/checkmk"
+      source = "withakedo/checkmk"
     }
   }
 }
@@ -38,7 +38,7 @@ provider "checkmk" {
 terraform {
   required_providers {
     checkmk = {
-      source = "withake-it/checkmk"
+      source = "withakedo/checkmk"
     }
   }
 }
@@ -79,7 +79,7 @@ resource "checkmk_host" "example" {
 terraform {
   required_providers {
     checkmk = {
-      source = "withake-it/checkmk"
+      source = "withakedo/checkmk"
     }
   }
 }
@@ -117,7 +117,7 @@ provider "checkmk" {
 terraform {
   required_providers {
     checkmk = {
-      source = "withake-it/checkmk"
+      source = "withakedo/checkmk"
     }
   }
 }

@@ -16,7 +16,7 @@ Use this data source to retrieve information about a CheckMK tag group.
 terraform {
   required_providers {
     checkmk = {
-      source = "withake-it/checkmk"
+      source = "withakedo/checkmk"
     }
   }
 }

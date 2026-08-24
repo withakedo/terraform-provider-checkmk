@@ -31,7 +31,7 @@ updates the discovery preview and does not require activation.
 terraform {
   required_providers {
     checkmk = {
-      source = "withake-it/checkmk"
+      source = "withakedo/checkmk"
     }
   }
 }

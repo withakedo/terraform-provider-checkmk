@@ -16,7 +16,7 @@ Use this data source to retrieve information about a CheckMK time period.
 terraform {
   required_providers {
     checkmk = {
-      source = "withake-it/checkmk"
+      source = "withakedo/checkmk"
     }
   }
 }

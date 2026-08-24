@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.1] - 2026-08-24
+
+### Fixed
+
+- Corrected the provider source/namespace from `withake-it/checkmk` to `withakedo/checkmk`
+  everywhere - `main.go`'s self-reported `Address`, the README, `docs/`, and every example `.tf`
+  file. The Terraform Registry publishes under the connected GitHub account (`withakedo`), not the
+  `withake-it` display name/domain used for the "Maintained by" branding; `withake-it/checkmk` was
+  never a valid, resolvable provider source. This affected every prior release back to v1.0.0.
+
 ## [1.4.0] - 2026-08-24
 
 ### Added
@@ -145,7 +155,7 @@ First release published under this fork.
 ### Changed
 
 - Rebranded as a Withake-IT fork of [BlackMesaLTD/terraform-provider-checkmk](https://github.com/BlackMesaLTD/terraform-provider-checkmk):
-  - Terraform provider source/address changed from `blackmesaltd/checkmk` to `withake-it/checkmk`.
+  - Terraform provider source/address changed from `blackmesaltd/checkmk` to `withakedo/checkmk`.
   - Go module path changed to `github.com/withakedo/terraform-provider-checkmk`.
   - `goreleaser`'s `project_name` and `tfplugindocs`' `--provider-name`/`--rendered-provider-name`
     are now pinned explicitly rather than inferred from the checkout directory name.

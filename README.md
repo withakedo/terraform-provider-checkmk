@@ -50,7 +50,7 @@ The `checkmk-api-spec` repository provides:
 terraform {
   required_providers {
     checkmk = {
-      source  = "withake-it/checkmk"
+      source  = "withakedo/checkmk"
       version = "~> 0.1"
     }
   }
@@ -347,7 +347,7 @@ go test -v ./internal/provider -timeout 30m
 cat >> ~/.terraformrc <<EOF
 provider_installation {
   dev_overrides {
-    "withake-it/checkmk" = "/path/to/terraform-provider-checkmk"
+    "withakedo/checkmk" = "/path/to/terraform-provider-checkmk"
   }
   direct {}
 }

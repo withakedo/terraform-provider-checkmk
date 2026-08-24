@@ -20,7 +20,7 @@ UI, by another automation, or by `checkmk_comment` resources managed elsewhere).
 terraform {
   required_providers {
     checkmk = {
-      source = "withake-it/checkmk"
+      source = "withakedo/checkmk"
     }
   }
 }

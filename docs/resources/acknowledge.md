@@ -27,7 +27,7 @@ existing acknowledgement and creates a new one.
 terraform {
   required_providers {
     checkmk = {
-      source = "withake-it/checkmk"
+      source = "withakedo/checkmk"
     }
   }
 }
