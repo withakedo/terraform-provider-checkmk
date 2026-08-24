@@ -26,6 +26,85 @@ type Client struct {
 	MaxRetries      int      // Maximum number of retries (default 3)
 	RetryWaitMin    time.Duration
 	RetryWaitMax    time.Duration
+
+	// LongOperationTimeout bounds requests to CheckMK's blocking "wait for
+	// completion" endpoints (activation, service discovery), which can
+	// legitimately run far longer than a normal CRUD call and must not be
+	// cut short by the general-purpose request_timeout. Defaults to 30
+	// minutes if unset.
+	LongOperationTimeout time.Duration
+}
+
+// longPollClient returns an http.Client bounded by LongOperationTimeout
+// instead of HTTPClient's normal request_timeout, sharing the same
+// Transport (and therefore connection pool). Redirects are not
+// auto-followed: CheckMK's wait-for-completion endpoints redirect to
+// themselves while still running, and Go's default 10-redirect cap would
+// otherwise cut off a long-running wait.
+func (c *Client) longPollClient() *http.Client {
+	timeout := c.LongOperationTimeout
+	if timeout <= 0 {
+		timeout = 30 * time.Minute
+	}
+	return &http.Client{
+		Timeout:   timeout,
+		Transport: c.HTTPClient.Transport,
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+	}
+}
+
+// pollSelfRedirectingCompletion polls a CheckMK "wait for completion"-style
+// endpoint that responds 302 (redirecting to itself) while the underlying
+// operation is still running, and 204 once it's done - the pattern used by
+// both activation and service discovery. It uses longPollClient rather than
+// HTTPClient so a slow operation isn't cut short by request_timeout, and
+// follows redirects manually so it isn't bound by Go's default 10-redirect
+// cap either.
+func (c *Client) pollSelfRedirectingCompletion(ctx context.Context, startURL string) error {
+	client := c.longPollClient()
+	url := startURL
+
+	for {
+		if err := ctx.Err(); err != nil {
+			return err
+		}
+
+		req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+		if err != nil {
+			return fmt.Errorf("failed to create request: %w", err)
+		}
+		req.Header.Set("Accept", "application/json")
+		req.SetBasicAuth(c.Username, c.Password)
+
+		resp, err := client.Do(req)
+		if err != nil {
+			return fmt.Errorf("wait for completion request failed: %w", err)
+		}
+
+		switch resp.StatusCode {
+		case http.StatusNoContent:
+			// Operation has completed.
+			resp.Body.Close()
+			return nil
+		case http.StatusFound:
+			// Still running; CheckMK redirects to itself to avoid timeouts.
+			if location := resp.Header.Get("Location"); location != "" {
+				url = location
+			}
+			resp.Body.Close()
+			continue
+		case http.StatusNotFound:
+			// No running operation with this id - treat as already complete
+			// (e.g. it finished and was cleaned up between trigger and the
+			// first poll).
+			resp.Body.Close()
+			return nil
+		default:
+			return c.handleResponse(resp, nil)
+		}
+	}
 }
 
 // SetProviderVersion sets the provider version for User-Agent header
@@ -38,6 +117,11 @@ type ClientOptions struct {
 	RequestTimeout     time.Duration
 	MaxRetries         int
 	InsecureSkipVerify bool
+
+	// LongOperationTimeout bounds blocking "wait for completion" calls
+	// (activation, service discovery) independently of RequestTimeout.
+	// Defaults to 30 minutes if unset.
+	LongOperationTimeout time.Duration
 }
 
 // NewClient creates a new CheckMK API client
@@ -82,6 +166,11 @@ func NewClientWithOptions(baseURL, username, password string, opts *ClientOption
 		IdleConnTimeout:     90 * time.Second,
 	}
 
+	longOperationTimeout := time.Duration(0)
+	if opts != nil {
+		longOperationTimeout = opts.LongOperationTimeout
+	}
+
 	client := &Client{
 		BaseURL:  parsedURL,
 		Username: username,
@@ -90,9 +179,10 @@ func NewClientWithOptions(baseURL, username, password string, opts *ClientOption
 			Timeout:   timeout,
 			Transport: transport,
 		},
-		MaxRetries:   maxRetries,
-		RetryWaitMin: 1 * time.Second,
-		RetryWaitMax: 30 * time.Second,
+		MaxRetries:           maxRetries,
+		RetryWaitMin:         1 * time.Second,
+		RetryWaitMax:         30 * time.Second,
+		LongOperationTimeout: longOperationTimeout,
 	}
 
 	// Detect version on initialization

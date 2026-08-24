@@ -72,11 +72,12 @@ provider "checkmk" {
   password = var.checkmk_password
 
   # Optional settings
-  activate              = "auto"    # "auto" or "manual" (default: "manual")
+  activate                = "auto"  # "auto" or "manual" (default: "manual")
   strict_resource_locking = true    # Use ETags for optimistic locking
-  request_timeout       = 60        # API timeout in seconds
-  max_retries           = 3         # Retry count for transient failures
-  insecure_skip_verify  = false     # Skip TLS verification (not recommended)
+  request_timeout         = 60      # API timeout in seconds
+  long_operation_timeout  = 1800    # Timeout for activation/service discovery (default: 1800)
+  max_retries             = 3       # Retry count for transient failures
+  insecure_skip_verify    = false   # Skip TLS verification (not recommended)
 }
 ```
 

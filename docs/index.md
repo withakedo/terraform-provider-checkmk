@@ -173,6 +173,7 @@ provider "checkmk" {
 - `activation_wait_time` (Number) Time in seconds to wait after activation for changes to propagate (default: 5). Increase this value if you experience eventual consistency issues. Only applies when activate = "auto".
 - `force_foreign_changes` (Boolean) Whether to activate changes made by other users/tools (default: true). When true, activates ALL pending changes (including those made externally). When false, activation may fail if there are pending changes made outside Terraform.
 - `insecure_skip_verify` (Boolean) Skip TLS certificate verification (default: false). WARNING: Only use this for testing with self-signed certificates. This makes the connection insecure and should not be used in production.
+- `long_operation_timeout` (Number) Timeout in seconds for long-running blocking operations - config activation and service discovery - independent of request_timeout (default: 1800). These operations can legitimately run far longer than a normal API call (e.g. service discovery on a host with many services, or activation across many sites), so they are not bound by request_timeout.
 - `max_retries` (Number) Maximum number of retries for failed API requests (default: 3). Retries occur on transient errors (429, 500, 502, 503, 504) with exponential backoff.
 - `password` (String, Sensitive) CheckMK automation user password. May also be provided via CHECKMK_PASSWORD environment variable.
 - `request_timeout` (Number) HTTP request timeout in seconds (default: 60). Increase this value for slow networks or large API responses.

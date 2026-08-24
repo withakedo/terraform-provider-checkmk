@@ -53,6 +53,7 @@ type checkmkProviderModel struct {
 	ActivationWaitTime    types.Int64  `tfsdk:"activation_wait_time"`
 	StrictResourceLocking types.Bool   `tfsdk:"strict_resource_locking"`
 	RequestTimeout        types.Int64  `tfsdk:"request_timeout"`
+	LongOperationTimeout  types.Int64  `tfsdk:"long_operation_timeout"`
 	MaxRetries            types.Int64  `tfsdk:"max_retries"`
 	InsecureSkipVerify    types.Bool   `tfsdk:"insecure_skip_verify"`
 	TypeMode              types.String `tfsdk:"type_mode"`
@@ -122,6 +123,14 @@ func (p *checkmkProvider) Schema(_ context.Context, _ provider.SchemaRequest, re
 			"request_timeout": schema.Int64Attribute{
 				Description: "HTTP request timeout in seconds (default: 60). " +
 					"Increase this value for slow networks or large API responses.",
+				Optional: true,
+			},
+			"long_operation_timeout": schema.Int64Attribute{
+				Description: "Timeout in seconds for long-running blocking operations - config " +
+					"activation and service discovery - independent of request_timeout (default: 1800). " +
+					"These operations can legitimately run far longer than a normal API call (e.g. " +
+					"service discovery on a host with many services, or activation across many sites), " +
+					"so they are not bound by request_timeout.",
 				Optional: true,
 			},
 			"max_retries": schema.Int64Attribute{
@@ -211,6 +220,11 @@ func (p *checkmkProvider) Configure(ctx context.Context, req provider.ConfigureR
 	// Request timeout (default: 60 seconds)
 	if !config.RequestTimeout.IsNull() {
 		opts.RequestTimeout = time.Duration(config.RequestTimeout.ValueInt64()) * time.Second
+	}
+
+	// Long operation timeout for activation/service discovery (default: 30 minutes)
+	if !config.LongOperationTimeout.IsNull() {
+		opts.LongOperationTimeout = time.Duration(config.LongOperationTimeout.ValueInt64()) * time.Second
 	}
 
 	// Max retries (default: 3)

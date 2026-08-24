@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-08-24
+
+### Added
+
+- **`long_operation_timeout`** provider setting - a separate, configurable timeout (default: 30
+  minutes) for CheckMK's blocking activation and service discovery "wait for completion"
+  endpoints, independent of `request_timeout`. Both endpoints redirect to themselves while the
+  underlying operation is still running; they were previously bound by the same `request_timeout`
+  used for ordinary fast CRUD calls (default 60s) and by Go's default 10-redirect cap, so a
+  legitimately slow activation or discovery run (many sites, many services) could be cut short
+  even though CheckMK was still working correctly.
+
+### Fixed
+
+- `strict_resource_locking = true` now actually enforces ETag validation on config activation.
+  Previously the provider always sent `If-Match: *` for the activate-changes call regardless of
+  this setting - the code had a comment acknowledging it wasn't implemented. It now fetches the
+  current pending-changes ETag immediately before activating and sends it as `If-Match`, so a
+  concurrent change to the pending change set between plan and apply surfaces as a drift error
+  instead of silently activating.
+
+### Performance
+
+- Config activation (`activate = "auto"`, and `checkmk_activation`) no longer blocks on a fixed
+  `activation_wait_time` sleep (default 5s) regardless of how long activation actually takes. It
+  now polls CheckMK's activation-run completion endpoint and returns as soon as activation
+  genuinely finishes, applying `activation_wait_time` only as a small propagation-margin buffer on
+  top. Since `activate = "auto"` runs activation on every resource create/update/delete, this adds
+  up on applies touching many resources.
+- Raised the HTTP transport's idle connection limit from Go's default of 2 per host to 25 (50
+  total). Terraform runs resource operations at parallelism 10 by default, all against the same
+  CheckMK host; the previous default meant most of that concurrency went to connection
+  setup/teardown instead of reuse.
+
 ## [1.2.0] - 2026-08-24
 
 ### Added

@@ -27,7 +27,10 @@ type ActivationResponse struct {
 // ActivateChanges activates pending configuration changes
 // forceForeignChanges controls whether to activate changes made by other users/tools (request body field)
 // strictResourceLocking controls ETag validation for both activation and resource operations
-//   - true: Requires proper ETag for activation endpoint (must GET pending changes first)
+//   - true: fetches the current pending-changes ETag and sends it as If-Match,
+//     so the activation fails with a precondition error (rather than silently
+//     activating) if the set of pending changes shifted between planning and
+//     applying.
 //   - false: Uses If-Match: * to bypass ETag validation (default, matches Python)
 //
 // waitTime is the number of seconds to wait, on top of the actual activation
@@ -45,13 +48,15 @@ func (c *Client) ActivateChanges(ctx context.Context, sites []string, forceForei
 	}
 
 	// Build headers based on strictResourceLocking setting
-	headers := make(map[string]string)
-	if !strictResourceLocking {
-		// Use If-Match: * to bypass ETag requirements (Python approach, default)
-		headers["If-Match"] = "*"
+	etag := ""
+	if strictResourceLocking {
+		var err error
+		etag, err = c.getPendingChangesETag(ctx)
+		if err != nil {
+			return fmt.Errorf("failed to fetch pending changes ETag for strict activation locking: %w", err)
+		}
 	}
-	// If strictResourceLocking is true, caller must provide ETag
-	// (not implemented yet - would need to GET pending changes first)
+	headers := BuildETagHeaders(etag)
 
 	resp, err := c.requestWithHeaders(ctx, "POST", "/domain-types/activation_run/actions/activate-changes/invoke", req, headers)
 	if err != nil {
@@ -62,6 +67,15 @@ func (c *Client) ActivateChanges(ctx context.Context, sites []string, forceForei
 	if resp.StatusCode == http.StatusUnprocessableEntity {
 		// No changes to activate is not an error
 		return nil
+	}
+
+	// Under strict locking, a 412 means the set of pending changes shifted
+	// between fetching the ETag and activating (e.g. someone else made a
+	// change concurrently) - surface that as drift rather than a generic
+	// API error.
+	if driftErr := HandlePreconditionFailed(resp, "Activation", "pending changes"); driftErr != nil {
+		resp.Body.Close()
+		return driftErr
 	}
 
 	// Just check that the request succeeded
@@ -89,69 +103,40 @@ func (c *Client) ActivateChanges(ctx context.Context, sites []string, forceForei
 	return nil
 }
 
+// getPendingChangesETag fetches the ETag identifying the current set of
+// pending changes, for use as the If-Match header on activate-changes under
+// strict resource locking. CheckMK validates that header against the live
+// set of pending changes, so this must be fetched immediately before
+// activating rather than cached.
+func (c *Client) getPendingChangesETag(ctx context.Context) (string, error) {
+	resp, err := c.request(ctx, "GET", "/domain-types/activation_run/collections/pending_changes", nil)
+	if err != nil {
+		return "", err
+	}
+
+	if err := c.handleResponse(resp, nil); err != nil {
+		return "", err
+	}
+
+	etag := resp.Header.Get("ETag")
+	if etag == "" {
+		return "", fmt.Errorf("CheckMK did not return an ETag for pending changes")
+	}
+	return etag, nil
+}
+
 // waitForActivationCompletion polls CheckMK's "wait for completion" endpoint
-// for the given activation run. That endpoint responds 302, redirecting to
-// itself, for as long as the activation is still running (CheckMK paces
-// these redirects itself to avoid client-side timeouts), and 204 once the
-// activation has finished. Redirects are followed manually (rather than via
-// the shared HTTPClient's default redirect-following) so each hop can be
-// distinguished from genuine completion.
+// for the given activation run until the activation genuinely finishes. See
+// pollSelfRedirectingCompletion for how the endpoint's self-redirecting
+// long-poll pattern is handled, and why it's bound by LongOperationTimeout
+// rather than the general request_timeout.
 func (c *Client) waitForActivationCompletion(ctx context.Context, activationID string) error {
 	if activationID == "" {
 		return nil
 	}
 
 	url := fmt.Sprintf("%s/check_mk/api/1.0/objects/activation_run/%s/actions/wait-for-completion/invoke", c.BaseURL.String(), activationID)
-
-	noRedirectClient := &http.Client{
-		Timeout:   c.HTTPClient.Timeout,
-		Transport: c.HTTPClient.Transport,
-		CheckRedirect: func(req *http.Request, via []*http.Request) error {
-			return http.ErrUseLastResponse
-		},
-	}
-
-	for {
-		if err := ctx.Err(); err != nil {
-			return err
-		}
-
-		req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
-		if err != nil {
-			return fmt.Errorf("failed to create request: %w", err)
-		}
-		req.Header.Set("Accept", "application/json")
-		req.SetBasicAuth(c.Username, c.Password)
-
-		resp, err := noRedirectClient.Do(req)
-		if err != nil {
-			return fmt.Errorf("wait for activation completion request failed: %w", err)
-		}
-
-		switch resp.StatusCode {
-		case http.StatusNoContent:
-			// Activation has completed.
-			resp.Body.Close()
-			return nil
-		case http.StatusFound:
-			// Still running; CheckMK redirects to itself to avoid timeouts.
-			// Follow the redirect target if provided, otherwise re-poll the
-			// same URL.
-			if location := resp.Header.Get("Location"); location != "" {
-				url = location
-			}
-			resp.Body.Close()
-			continue
-		case http.StatusNotFound:
-			// No running activation with this id - treat as already
-			// complete (e.g. it finished and was cleaned up between our
-			// trigger and the first poll).
-			resp.Body.Close()
-			return nil
-		default:
-			return c.handleResponse(resp, nil)
-		}
-	}
+	return c.pollSelfRedirectingCompletion(ctx, url)
 }
 
 // requestWithHeaders makes an HTTP request with custom headers

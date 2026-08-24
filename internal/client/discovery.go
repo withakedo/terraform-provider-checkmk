@@ -68,17 +68,15 @@ func (c *Client) DiscoverServices(ctx context.Context, hostName, mode string) (*
 	return c.waitForDiscoveryCompletion(ctx, hostName)
 }
 
-// waitForDiscoveryCompletion polls CheckMK's blocking wait-for-completion
-// endpoint and then fetches the final run status.
+// waitForDiscoveryCompletion polls CheckMK's wait-for-completion endpoint -
+// which, like activation's, redirects to itself while the discovery run is
+// still in progress - and then fetches the final run status. Polling uses
+// LongOperationTimeout rather than the general request_timeout, since
+// discovery on a host with many services can legitimately run far longer
+// than a normal CRUD call.
 func (c *Client) waitForDiscoveryCompletion(ctx context.Context, hostName string) (*ServiceDiscoveryRunExtensions, error) {
-	waitPath := fmt.Sprintf("/objects/service_discovery_run/%s/actions/wait-for-completion/invoke", hostName)
-	waitResp, err := c.request(ctx, "GET", waitPath, nil)
-	if err != nil {
-		return nil, err
-	}
-	// The wait endpoint blocks server-side until the run finishes; its body
-	// (if any) isn't needed since we re-fetch the run status below.
-	if err := c.handleResponse(waitResp, nil); err != nil {
+	waitURL := fmt.Sprintf("%s/check_mk/api/1.0/objects/service_discovery_run/%s/actions/wait-for-completion/invoke", c.BaseURL.String(), hostName)
+	if err := c.pollSelfRedirectingCompletion(ctx, waitURL); err != nil {
 		return nil, err
 	}
 
