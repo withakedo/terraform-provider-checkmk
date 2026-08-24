@@ -4,11 +4,11 @@
 
 version: 2
 
-# Pinned explicitly: GoReleaser otherwise infers this from the checkout
-# directory name, which is "terraform_checkmk_provider" (underscores) for
-# this fork's repo. Terraform's provider install protocol requires binaries
-# named "terraform-provider-<TYPE>_v<VERSION>_<OS>_<ARCH>", so this must stay
-# "terraform-provider-checkmk" regardless of the repository's own name.
+# Pinned explicitly rather than relying on GoReleaser's default inference
+# from the checkout directory name. Terraform's provider install protocol
+# requires binaries named "terraform-provider-<TYPE>_v<VERSION>_<OS>_<ARCH>",
+# so this must stay "terraform-provider-checkmk" even if the repository is
+# ever checked out under a different directory name.
 project_name: terraform-provider-checkmk
 
 before:

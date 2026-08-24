@@ -20,8 +20,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/withakedo/terraform_checkmk_provider/internal/client"
-	"github.com/withakedo/terraform_checkmk_provider/internal/common"
+	"github.com/withakedo/terraform-provider-checkmk/internal/client"
+	"github.com/withakedo/terraform-provider-checkmk/internal/common"
 )
 
 // ProviderData contains the provider configuration needed by resources.

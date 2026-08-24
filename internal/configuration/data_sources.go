@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/withakedo/terraform_checkmk_provider/internal/common"
+	"github.com/withakedo/terraform-provider-checkmk/internal/common"
 )
 
 // =============================================================================

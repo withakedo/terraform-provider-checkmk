@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/withakedo/terraform_checkmk_provider/internal/client"
+	"github.com/withakedo/terraform-provider-checkmk/internal/client"
 )
 
 // AttributeValidator provides validation for host/folder attributes using generated types.

@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 
-	"github.com/withakedo/terraform_checkmk_provider/internal/provider"
+	"github.com/withakedo/terraform-provider-checkmk/internal/provider"
 )
 
 // Run "go generate" to format example terraform files and generate the docs for the registry/website

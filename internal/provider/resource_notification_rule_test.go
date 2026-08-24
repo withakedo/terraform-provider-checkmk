@@ -9,7 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
-	"github.com/withakedo/terraform_checkmk_provider/internal/client"
+	"github.com/withakedo/terraform-provider-checkmk/internal/client"
 )
 
 // isCheckmk22 returns true if running against CheckMK 2.2.x

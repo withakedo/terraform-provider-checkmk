@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
-	"github.com/withakedo/terraform_checkmk_provider/internal/client"
+	"github.com/withakedo/terraform-provider-checkmk/internal/client"
 )
 
 // testAccProtoV6ProviderFactories are used to instantiate a provider during

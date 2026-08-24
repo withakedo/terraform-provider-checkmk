@@ -144,7 +144,7 @@ func (c *Client) request(ctx context.Context, method, path string, body interfac
 		providerVersion = "dev"
 	}
 	userAgent := fmt.Sprintf(
-		"terraform-provider-checkmk/%s (+https://github.com/withakedo/terraform_checkmk_provider)",
+		"terraform-provider-checkmk/%s (+https://github.com/withakedo/terraform-provider-checkmk)",
 		providerVersion,
 	)
 

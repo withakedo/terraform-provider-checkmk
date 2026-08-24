@@ -1,4 +1,4 @@
-module github.com/withakedo/terraform_checkmk_provider
+module github.com/withakedo/terraform-provider-checkmk
 
 go 1.24.1
 

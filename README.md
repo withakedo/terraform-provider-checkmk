@@ -6,7 +6,7 @@ Maintained by [Withake-IT](https://withake-it.de).
 
 > **Fork notice:** This project is a fork of [BlackMesaLTD/terraform-provider-checkmk](https://github.com/BlackMesaLTD/terraform-provider-checkmk),
 > licensed under the [Mozilla Public License 2.0](LICENSE). It continues development independently under
-> [withakedo/terraform_checkmk_provider](https://github.com/withakedo/terraform_checkmk_provider), including
+> [withakedo/terraform-provider-checkmk](https://github.com/withakedo/terraform-provider-checkmk), including
 > ongoing compatibility updates for newer CheckMK releases. All credit for the original implementation goes to
 > the upstream authors.
 

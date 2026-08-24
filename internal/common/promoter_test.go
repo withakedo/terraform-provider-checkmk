@@ -3,7 +3,7 @@ package common
 import (
 	"testing"
 
-	"github.com/withakedo/terraform_checkmk_provider/internal/client"
+	"github.com/withakedo/terraform-provider-checkmk/internal/client"
 )
 
 func TestAttributePromoter_APIKey(t *testing.T) {

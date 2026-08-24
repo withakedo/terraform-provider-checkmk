@@ -10,8 +10,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/withakedo/terraform_checkmk_provider/internal/client"
-	"github.com/withakedo/terraform_checkmk_provider/internal/common"
+	"github.com/withakedo/terraform-provider-checkmk/internal/client"
+	"github.com/withakedo/terraform-provider-checkmk/internal/common"
 )
 
 // GroupResourceModel is the shared data model for all group resources.

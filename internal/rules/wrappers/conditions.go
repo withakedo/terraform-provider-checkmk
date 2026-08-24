@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/withakedo/terraform_checkmk_provider/internal/rules"
+	"github.com/withakedo/terraform-provider-checkmk/internal/rules"
 )
 
 // Re-export condition utilities from the rules package.
