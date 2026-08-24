@@ -3,7 +3,69 @@ package client
 import (
 	"context"
 	"net/http"
+	"net/url"
 )
+
+// DowntimeMode describes a downtime's fixed/flexible mode. Mirrors the
+// "DowntimeMode" discriminated union (FixedDowntimeMode/FlexibleDowntimeMode)
+// from the CheckMK REST API.
+type DowntimeMode struct {
+	Type            string `json:"type"`
+	DurationMinutes int64  `json:"duration_minutes,omitempty"`
+}
+
+// DowntimeInfo describes a single active downtime, as returned by
+// ListDowntimes. Mirrors the "DowntimeAttributes" discriminated union
+// (HostDowntimeAttributes/ServiceDowntimeAttributes) from the CheckMK REST
+// API, flattened into one struct since both variants share almost every
+// field.
+type DowntimeInfo struct {
+	ID                 string       `json:"-"`
+	SiteID             string       `json:"site_id"`
+	HostName           string       `json:"host_name"`
+	Author             string       `json:"author"`
+	StartTime          string       `json:"start_time"`
+	EndTime            string       `json:"end_time"`
+	Recurring          bool         `json:"recurring"`
+	Comment            string       `json:"comment"`
+	Mode               DowntimeMode `json:"mode"`
+	IsService          bool         `json:"is_service"`
+	ServiceDescription string       `json:"service_description,omitempty"`
+}
+
+type downtimeObjectResponse struct {
+	ID         string       `json:"id"`
+	Extensions DowntimeInfo `json:"extensions"`
+}
+
+type downtimeCollectionResponse struct {
+	Value []downtimeObjectResponse `json:"value"`
+}
+
+// ListDowntimes lists active downtimes for a host (both host- and
+// service-level downtimes on it).
+func (c *Client) ListDowntimes(ctx context.Context, hostName string) ([]DowntimeInfo, error) {
+	q := url.Values{}
+	q.Set("host_name", hostName)
+	q.Set("downtime_type", "both")
+
+	resp, err := c.request(ctx, "GET", "/domain-types/downtime/collections/all?"+q.Encode(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result downtimeCollectionResponse
+	if err := c.handleResponse(resp, &result); err != nil {
+		return nil, err
+	}
+
+	infos := make([]DowntimeInfo, len(result.Value))
+	for i, v := range result.Value {
+		infos[i] = v.Extensions
+		infos[i].ID = v.ID
+	}
+	return infos, nil
+}
 
 // CreateHostDowntimeRequest schedules a downtime for a single host.
 // Mirrors the "CreateHostDowntime" schema (downtime_type = "host") from the

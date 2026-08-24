@@ -7,6 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-08-24
+
+### Added
+
+- **`checkmk_hosts_bulk`** resource - manages many hosts through CheckMK's bulk-create/bulk-update/
+  bulk-delete endpoints, so a single apply issues 1 API call per operation regardless of host
+  count, instead of the N calls `checkmk_host` with `for_each` would make. Diffs between plan and
+  state are translated into the appropriate bulk create/update/delete calls. CheckMK's bulk
+  endpoints are not transactional, so a partial failure can leave some hosts created/updated on
+  the CheckMK side without Terraform recording it in state - the error message lists which host
+  names succeeded and failed.
+- **`checkmk_bi_aggregation`** resource - manages a CheckMK Business Intelligence aggregation (a
+  health-status rollup computed from a tree of hosts/services). The aggregation's rule tree is
+  recursive and highly variable, so it's handled as raw JSON in `definition_raw`, mirroring how
+  `checkmk_rule` handles arbitrary ruleset values with `value_raw`.
+- **`checkmk_site_connection`** resource - manages a CheckMK site connection for distributed
+  monitoring (connecting this site to a remote monitoring site). Like the BI aggregation resource,
+  the connection's deeply-nested configuration schema is handled as raw JSON in `config_raw`. This
+  resource manages connection configuration only, not the separate remote-site login/logout
+  actions.
+- **`checkmk_downtimes`** and **`checkmk_comments`** data sources - list the downtimes/comments
+  currently active on a host (host- and service-level). `checkmk_downtime` and `checkmk_comment`
+  have no persistent server-side object to read back on their own (see their known limitations),
+  so these data sources are the way to detect that kind of drift or observe downtimes/comments
+  created outside Terraform.
+
+### Known limitations
+
+- `checkmk_hosts_bulk` doesn't support moving a host between folders after creation (matching
+  `checkmk_host`); changing `folder` on an existing entry has no effect.
+- `checkmk_bi_aggregation` and `checkmk_site_connection` refresh their raw-JSON attribute
+  (`definition_raw` / `config_raw`) from the API response on every read, which may include
+  CheckMK-filled default fields not present in the original configuration; if those defaults
+  don't round-trip byte-for-byte through `jsonencode`, this can show a perpetual diff until the
+  defaulted fields are added explicitly.
+- `checkmk_site_connection` does not perform the remote-site login/logout actions; log in via the
+  CheckMK UI or API after creating a connection if replication is enabled.
+
 ## [1.3.0] - 2026-08-24
 
 ### Added

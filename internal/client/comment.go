@@ -3,7 +3,54 @@ package client
 import (
 	"context"
 	"net/http"
+	"net/url"
 )
+
+// CommentInfo describes a single active comment, as returned by
+// ListComments. Mirrors the "CommentAttributes" schema from the CheckMK
+// REST API.
+type CommentInfo struct {
+	ID                 int64  `json:"id"`
+	SiteID             string `json:"site_id"`
+	HostName           string `json:"host_name"`
+	Author             string `json:"author"`
+	Comment            string `json:"comment"`
+	Persistent         bool   `json:"persistent"`
+	EntryTime          string `json:"entry_time"`
+	IsService          bool   `json:"is_service"`
+	ServiceDescription string `json:"service_description,omitempty"`
+}
+
+type commentObjectResponse struct {
+	Extensions CommentInfo `json:"extensions"`
+}
+
+type commentCollectionResponse struct {
+	Value []commentObjectResponse `json:"value"`
+}
+
+// ListComments lists active comments for a host (both host- and
+// service-level comments on it).
+func (c *Client) ListComments(ctx context.Context, hostName string) ([]CommentInfo, error) {
+	q := url.Values{}
+	q.Set("host_name", hostName)
+
+	resp, err := c.request(ctx, "GET", "/domain-types/comment/collections/all?"+q.Encode(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result commentCollectionResponse
+	if err := c.handleResponse(resp, &result); err != nil {
+		return nil, err
+	}
+
+	infos := make([]CommentInfo, len(result.Value))
+	for i, v := range result.Value {
+		infos[i] = v.Extensions
+	}
+	return infos, nil
+}
 
 // CreateHostCommentRequest adds a comment to a single host. Mirrors the
 // "CreateHostComment" schema (comment_type = "host") from the CheckMK REST

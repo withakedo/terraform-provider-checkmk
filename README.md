@@ -19,6 +19,9 @@ Maintained by [Withake-IT](https://withake-it.de).
 - **Optimistic locking** - ETag-based concurrency control prevents conflicting updates
 - **Flexible activation** - auto-activate changes or batch them with explicit activation resources
 - **Import support** - bring existing CheckMK configuration under Terraform management
+- **Bulk host operations** - `checkmk_hosts_bulk` issues 1 API call per apply operation for many hosts, instead of one call per host
+- **Distributed monitoring** - `checkmk_site_connection` manages connections to remote monitoring sites
+- **Business Intelligence** - `checkmk_bi_aggregation` manages BI health-status rollups
 - **Organized documentation** - resources grouped by category (Hosts & Folders, Rules, Users, etc.)
 
 ## Related Projects
@@ -102,6 +105,7 @@ Environment variables are also supported:
 | Resource | Description |
 |----------|-------------|
 | `checkmk_host` | Monitored hosts with attributes, tags, and labels |
+| `checkmk_hosts_bulk` | Manages many hosts via CheckMK's bulk-create/update/delete endpoints (1 API call per operation) |
 | `checkmk_host_group` | Logical groupings of hosts |
 | `checkmk_service_group` | Logical groupings of services |
 
@@ -149,6 +153,18 @@ Simplified interfaces for common rule types:
 | `checkmk_acknowledge` | Acknowledges the current problem state of a host or service |
 | `checkmk_comment` | Adds a comment to a host or service |
 
+### Business Intelligence
+
+| Resource | Description |
+|----------|-------------|
+| `checkmk_bi_aggregation` | Health-status rollup computed from a tree of hosts/services |
+
+### Distributed Monitoring
+
+| Resource | Description |
+|----------|-------------|
+| `checkmk_site_connection` | Connects a remote monitoring site to this site |
+
 ### Data Sources
 
 | Data Source | Description |
@@ -165,6 +181,8 @@ Simplified interfaces for common rule types:
 | `checkmk_time_period` | Look up an existing time period |
 | `checkmk_rule` | Look up an existing rule by ID |
 | `checkmk_notification_rule` | Look up an existing notification rule by ID |
+| `checkmk_downtimes` | List active downtimes on a host (drift detection for `checkmk_downtime`) |
+| `checkmk_comments` | List comments on a host (drift detection for `checkmk_comment`) |
 
 ## Quick Start
 
@@ -268,9 +286,20 @@ it) is updated.
 - **Rule ordering** - Rule order within a ruleset is managed but bulk reordering operations are not atomic.
 
 ### Operations
-- **Single-site only** - Distributed monitoring with multiple sites is not yet supported.
-- **No bulk operations** - Each resource is created/updated individually; bulk host creation is not implemented.
 - **Activation scope** - Activation applies to all pending changes, not just Terraform-managed resources.
+- **Bulk hosts: no folder moves, not transactional** - `checkmk_hosts_bulk` doesn't support moving a host between
+  folders after creation (matching `checkmk_host`). CheckMK's bulk endpoints also aren't transactional: a
+  partially-failing bulk-create/update can leave some hosts created/updated on the CheckMK side without Terraform
+  recording it in state - the error message lists which host names succeeded and failed; reconcile manually.
+- **Site connections: configuration only** - `checkmk_site_connection` manages the connection's configuration but
+  does not perform the separate remote-site login/logout actions, which exchange admin credentials for the remote
+  site. Log in via the CheckMK UI or API after creating a connection if replication is enabled.
+- **BI aggregations and site connections: raw JSON body** - `checkmk_bi_aggregation` and `checkmk_site_connection`
+  take their configuration as a JSON-encoded string (`definition_raw` / `config_raw`) rather than a typed schema,
+  since both underlying CheckMK schemas are large, deeply nested, and highly variable - the same approach
+  `checkmk_rule` uses for `value_raw`. On read, these fields are refreshed from the API's response, which may
+  include CheckMK-filled defaults you didn't specify; if those defaults don't round-trip byte-for-byte through
+  `jsonencode`, this can show a perpetual diff until you add the defaulted fields explicitly.
 - **Service discovery is not re-readable** - `checkmk_service_discovery` triggers a discovery run and records its
   result, but (like `checkmk_activation`) has no persistent server-side object to read back; drift in a host's
   discovered services is not detected automatically. Re-run `terraform apply` to re-trigger discovery.

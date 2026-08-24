@@ -356,6 +356,10 @@ func (p *checkmkProvider) Configure(ctx context.Context, req provider.ConfigureR
 func (p *checkmkProvider) DataSources(_ context.Context) []func() datasource.DataSource {
 	var datasources []func() datasource.DataSource
 
+	// Add provider-level data sources
+	datasources = append(datasources, NewDowntimesDataSource)
+	datasources = append(datasources, NewCommentsDataSource)
+
 	// Add data sources from each package
 	datasources = append(datasources, configuration.DataSources()...)
 	datasources = append(datasources, users.DataSources()...)
@@ -377,6 +381,8 @@ func (p *checkmkProvider) Resources(_ context.Context) []func() resource.Resourc
 	resources = append(resources, NewDowntimeResource)
 	resources = append(resources, NewAcknowledgeResource)
 	resources = append(resources, NewCommentResource)
+	resources = append(resources, NewBIAggregationResource)
+	resources = append(resources, NewSiteConnectionResource)
 
 	// Add resources from each package
 	resources = append(resources, configuration.Resources()...)
