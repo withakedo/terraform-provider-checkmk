@@ -1,0 +1,86 @@
+package client
+
+import (
+	"context"
+	"net/http"
+)
+
+// CreateHostCommentRequest adds a comment to a single host. Mirrors the
+// "CreateHostComment" schema (comment_type = "host") from the CheckMK REST
+// API.
+type CreateHostCommentRequest struct {
+	CommentType string `json:"comment_type"`
+	HostName    string `json:"host_name"`
+	Comment     string `json:"comment"`
+	Persistent  bool   `json:"persistent"`
+}
+
+// CreateServiceCommentRequest adds a comment to a service on a host. Mirrors
+// the "CreateServiceComment" schema (comment_type = "service") from the
+// CheckMK REST API.
+type CreateServiceCommentRequest struct {
+	CommentType        string `json:"comment_type"`
+	HostName           string `json:"host_name"`
+	ServiceDescription string `json:"service_description"`
+	Comment            string `json:"comment"`
+	Persistent         bool   `json:"persistent"`
+}
+
+// DeleteCommentsByParamsRequest deletes comment(s) by host (and optionally
+// specific services) rather than by server-generated comment id. CheckMK's
+// create-comment endpoints respond 204 No Content with no id, so matching by
+// the original parameters avoids having to look up the generated comment_id
+// afterward.
+type DeleteCommentsByParamsRequest struct {
+	DeleteType          string   `json:"delete_type"`
+	HostName            string   `json:"host_name"`
+	ServiceDescriptions []string `json:"service_descriptions,omitempty"`
+}
+
+// CreateHostComment adds a comment to a host.
+func (c *Client) CreateHostComment(ctx context.Context, req *CreateHostCommentRequest) error {
+	resp, err := c.request(ctx, "POST", "/domain-types/comment/collections/host", req)
+	if err != nil {
+		return err
+	}
+	if apiErr := HandleNotFound(resp, "Host", req.HostName); apiErr != nil {
+		resp.Body.Close()
+		return apiErr
+	}
+	return c.handleResponse(resp, nil)
+}
+
+// CreateServiceComment adds a comment to a service on a host.
+func (c *Client) CreateServiceComment(ctx context.Context, req *CreateServiceCommentRequest) error {
+	resp, err := c.request(ctx, "POST", "/domain-types/comment/collections/service", req)
+	if err != nil {
+		return err
+	}
+	if apiErr := HandleNotFound(resp, "Host", req.HostName); apiErr != nil {
+		resp.Body.Close()
+		return apiErr
+	}
+	return c.handleResponse(resp, nil)
+}
+
+// DeleteCommentsByParams removes the comment(s) matching a host and,
+// optionally, a specific set of services. Deleting comments that no longer
+// exist is treated as success, matching the idempotent-delete convention
+// used elsewhere in this client.
+func (c *Client) DeleteCommentsByParams(ctx context.Context, hostName string, serviceDescriptions []string) error {
+	req := &DeleteCommentsByParamsRequest{
+		DeleteType:          "params",
+		HostName:            hostName,
+		ServiceDescriptions: serviceDescriptions,
+	}
+
+	resp, err := c.request(ctx, "POST", "/domain-types/comment/actions/delete/invoke", req)
+	if err != nil {
+		return err
+	}
+	if resp.StatusCode == http.StatusNotFound {
+		resp.Body.Close()
+		return nil
+	}
+	return c.handleResponse(resp, nil)
+}

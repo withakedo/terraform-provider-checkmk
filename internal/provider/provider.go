@@ -361,6 +361,8 @@ func (p *checkmkProvider) Resources(_ context.Context) []func() resource.Resourc
 	resources = append(resources, NewActivationResource)
 	resources = append(resources, NewServiceDiscoveryResource)
 	resources = append(resources, NewDowntimeResource)
+	resources = append(resources, NewAcknowledgeResource)
+	resources = append(resources, NewCommentResource)
 
 	// Add resources from each package
 	resources = append(resources, configuration.Resources()...)

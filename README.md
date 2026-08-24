@@ -145,6 +145,25 @@ Simplified interfaces for common rule types:
 | `checkmk_activation` | Explicit activation checkpoint for staged changes |
 | `checkmk_service_discovery` | Triggers service discovery for a host |
 | `checkmk_downtime` | Schedules a host or service maintenance window |
+| `checkmk_acknowledge` | Acknowledges the current problem state of a host or service |
+| `checkmk_comment` | Adds a comment to a host or service |
+
+### Data Sources
+
+| Data Source | Description |
+|-------------|-------------|
+| `checkmk_host` | Look up an existing host and its attributes |
+| `checkmk_folder` | Look up an existing folder |
+| `checkmk_host_group` | Look up an existing host group |
+| `checkmk_service_group` | Look up an existing service group |
+| `checkmk_user` | Look up an existing user account |
+| `checkmk_contact_group` | Look up an existing contact group |
+| `checkmk_password` | Look up an existing stored credential |
+| `checkmk_aux_tag` | Look up an existing auxiliary tag |
+| `checkmk_tag_group` | Look up an existing host tag group |
+| `checkmk_time_period` | Look up an existing time period |
+| `checkmk_rule` | Look up an existing rule by ID |
+| `checkmk_notification_rule` | Look up an existing notification rule by ID |
 
 ## Quick Start
 
@@ -235,7 +254,7 @@ it) is updated.
 
 ### API Coverage
 - **Partial resource coverage** - Not all CheckMK REST API endpoints are implemented yet. Priority has been given to hosts, folders, users, and rules.
-- **No data sources** - Currently only resources are implemented; data sources for reading existing configuration are planned.
+- **Partial data source coverage** - Data sources exist for the most commonly-referenced object types (hosts, folders, groups, users, rules, etc. - see the table above), but not every resource type has a matching data source yet.
 
 ### Validation
 - **Plan-time validation** - Enum values of known fields (like `tag_agent`) are validated during `terraform plan` when connected to CheckMK. Invalid values produce errors before apply.
@@ -259,6 +278,11 @@ it) is updated.
   forces replacement on change, since CheckMK's downtime create endpoints don't return a lookup-friendly id to
   target with the separate "modify downtime" endpoint. Deleting the resource cancels the downtime by host/service
   parameters rather than by CheckMK's internal downtime id.
+- **Acknowledgements and comments: host and single service only, no in-place modify** - `checkmk_acknowledge` and
+  `checkmk_comment` support a single host or a single service on a host; `hostgroup`, `servicegroup`, and
+  query-based targets are not yet implemented. Every attribute forces replacement on change, for the same reason
+  as `checkmk_downtime` - CheckMK's create endpoints don't return a lookup-friendly id. Deleting either resource
+  removes the acknowledgement/comment by host/service parameters rather than by CheckMK's internal id.
 
 ### Version Differences
 - **Schema variations** - Some attributes are only available in certain CheckMK versions. The provider accepts all attributes but the API may reject version-incompatible values.

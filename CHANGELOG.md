@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-08-24
+
+### Added
+
+- **`checkmk_acknowledge`** resource - acknowledges the current problem state of a host, or of a
+  single service on a host. Supports `sticky`, `persistent`, `notify`, and `expire_on`, matching
+  the CheckMK REST API's acknowledgement options. Takes effect immediately and does not require
+  activation.
+- **`checkmk_comment`** resource - adds a comment to a host, or to a single service on a host.
+  Supports `persistent` to survive a CheckMK restart. Takes effect immediately and does not
+  require activation.
+
+### Changed
+
+- README corrected: data sources were already implemented for hosts, folders, host/service
+  groups, users, contact groups, passwords, aux tags, tag groups, time periods, rules, and
+  notification rules, but the README incorrectly listed "no data sources" as a limitation. Added
+  a Data Sources table documenting what's available.
+
+### Known limitations
+
+- `checkmk_acknowledge` and `checkmk_comment` support a single host or single service only -
+  `hostgroup`, `servicegroup`, and query-based targets are not yet implemented. Every attribute
+  forces resource replacement on change, for the same reason as `checkmk_downtime`; delete
+  removes by host/service parameters instead of CheckMK's internal id.
+
+## [1.1.0] - 2026-08-24
+
 ### Added
 
 - **`checkmk_service_discovery`** resource - triggers CheckMK service discovery for a host, so
