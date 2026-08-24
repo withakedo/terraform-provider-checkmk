@@ -68,11 +68,18 @@ func NewClientWithOptions(baseURL, username, password string, opts *ClientOption
 		insecureSkipVerify = opts.InsecureSkipVerify
 	}
 
-	// Create HTTP transport with TLS options
+	// Create HTTP transport with TLS options. Terraform runs resource
+	// operations concurrently (default parallelism of 10), all against the
+	// same CheckMK host; the default transport only keeps 2 idle
+	// connections per host, so without raising these limits most of that
+	// concurrency was going to connection setup/teardown instead of reuse.
 	transport := &http.Transport{
 		TLSClientConfig: &tls.Config{
 			InsecureSkipVerify: insecureSkipVerify,
 		},
+		MaxIdleConns:        50,
+		MaxIdleConnsPerHost: 25,
+		IdleConnTimeout:     90 * time.Second,
 	}
 
 	client := &Client{
