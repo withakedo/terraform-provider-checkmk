@@ -24,7 +24,7 @@ import (
 // since that name doesn't always match the repository (e.g. a local clone
 // folder that predates a repository rename, or a fork checked out under a
 // different name).
-//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs --provider-name checkmk --rendered-provider-name checkmk
+//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs generate --provider-name checkmk --rendered-provider-name checkmk
 
 var (
 	// these will be set by the goreleaser configuration
