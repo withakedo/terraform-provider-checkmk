@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.4] - 2026-08-25
+
 ### Fixed
 
 - **Activation gave up too early on a foreign `423 Locked`.** When CheckMK reports that
