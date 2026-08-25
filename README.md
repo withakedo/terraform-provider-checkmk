@@ -254,20 +254,49 @@ provider "checkmk" {
 </details>
 
 <details>
-<summary><b>Rule Wrappers</b> <i>(typed, simplified interfaces for common rule types)</i></summary>
+<summary><b>Rule Wrappers</b> <i>(typed, simplified interfaces for common rule types — 27 total)</i></summary>
+
+**Hosts**
 
 | Resource | Description |
 |----------|-------------|
 | `checkmk_host_check_interval` | Host check interval configuration |
-| `checkmk_service_check_interval` | Service check interval configuration |
-| `checkmk_host_notification_period` | Host notification time periods |
-| `checkmk_service_notification_period` | Service notification time periods |
-| `checkmk_host_max_check_attempts` | Host check retry configuration |
-| `checkmk_service_max_check_attempts` | Service check retry configuration |
-| `checkmk_host_retry_interval` | Host retry interval configuration |
-| `checkmk_service_retry_interval` | Service retry interval configuration |
+| `checkmk_host_check_period` | Host check period configuration |
 | `checkmk_host_check_commands` | Host check command configuration |
+| `checkmk_host_max_check_attempts` | Host check retry configuration |
+| `checkmk_host_retry_interval` | Host retry interval configuration |
+| `checkmk_host_notification_period` | Host notification time periods |
+| `checkmk_host_first_notification_delay` | Delay before the first host notification |
+| `checkmk_host_notification_interval` | Interval between repeated host notifications |
+| `checkmk_host_notification_options` | Host state changes that trigger notifications |
+| `checkmk_host_notifications_enabled` | Enables or disables notifications for hosts |
+
+**Services**
+
+| Resource | Description |
+|----------|-------------|
+| `checkmk_service_check_interval` | Service check interval configuration |
+| `checkmk_service_check_period` | Service check period configuration |
+| `checkmk_service_max_check_attempts` | Service check retry configuration |
+| `checkmk_service_retry_interval` | Service retry interval configuration |
 | `checkmk_service_custom_rule` | Custom service rules |
+| `checkmk_service_active_checks_enabled` | Enables or disables active checks for services |
+| `checkmk_service_passive_checks_enabled` | Enables or disables passive checks for services |
+| `checkmk_service_process_perf_data` | Enables or disables performance data processing for services |
+| `checkmk_service_notification_period` | Service notification time periods |
+| `checkmk_service_first_notification_delay` | Delay before the first service notification |
+| `checkmk_service_notification_interval` | Interval between repeated service notifications |
+| `checkmk_service_notification_options` | Service state changes that trigger notifications |
+| `checkmk_service_notifications_enabled` | Enables or disables notifications for services |
+| `checkmk_service_flap_detection_enabled` | Enables or disables flap detection for services |
+| `checkmk_custom_service_attributes` | Custom attributes for services |
+| `checkmk_service_label_rules` | Typed wrapper for service label assignment rules |
+
+**Agent Configuration**
+
+| Resource | Description |
+|----------|-------------|
+| `checkmk_agent_config_mrpe` | MRPE (MK's Remote Plugin Executor) checks for the CheckMK agent — requires agent baking |
 
 </details>
 
