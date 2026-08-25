@@ -1,26 +1,37 @@
+<a id="top"></a>
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:4c1d95,100:9333ea&height=220&section=header&text=Terraform%20Provider%20for%20CheckMK&fontSize=42&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Monitoring%20infrastructure%20as%20code%2C%20powered%20by%20the%20CheckMK%20REST%20API&descAlignY=58&descSize=18" width="100%" alt="banner" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:4c1d95,50:7c3aed,100:9333ea&height=230&section=header&text=Terraform%20Provider%20for%20CheckMK&fontSize=40&fontColor=ffffff&animation=fadeIn&fontAlignY=36&desc=Monitoring%20infrastructure%20as%20code%2C%20powered%20by%20the%20CheckMK%20REST%20API&descAlignY=54&descSize=17" width="100%" alt="banner" />
 
-<a href="https://github.com/withakedo/terraform-provider-checkmk">
-  <img src="https://readme-typing-svg.demolab.com/?font=Fira+Code&size=20&pause=1200&color=9333EA&center=true&vCenter=true&width=700&lines=terraform+plan+%E2%86%92+checkmk_host.web_server+will+be+created;terraform+apply+%E2%86%92+Apply+complete!+Resources%3A+1+added;checkmk_activation.deploy+%E2%86%92+changes+activated" alt="typing animation" />
-</a>
+<img src="https://readme-typing-svg.demolab.com/?font=Fira+Code&size=18&pause=1400&color=9333EA&center=true&vCenter=true&width=680&lines=terraform+plan+%E2%86%92+2+to+add%2C+0+to+change%2C+0+to+destroy;terraform+apply+%E2%86%92+Apply+complete!;checkmk_activation.deploy+%E2%86%92+changes+activated" alt="typing animation" />
 
 <br/>
 
-[![Go Reference](https://img.shields.io/badge/go-%3E%3D1.21-00ADD8?style=for-the-badge&logo=go&logoColor=white)](go.mod)
-[![Terraform](https://img.shields.io/badge/terraform-%3E%3D1.0-7C3AED?style=for-the-badge&logo=terraform&logoColor=white)](#installation)
-[![CheckMK](https://img.shields.io/badge/checkmk-2.2%20%7C%202.3%20%7C%202.4%20%7C%202.5-9333EA?style=for-the-badge&logo=checkmk&logoColor=white)](#version-compatibility)
-[![License](https://img.shields.io/badge/license-MPL--2.0-9333EA?style=for-the-badge)](LICENSE)
+<!-- brand badges: official colors -->
+[![Go](https://img.shields.io/badge/Go-%3E%3D1.21-00ADD8?style=for-the-badge&logo=go&logoColor=white)](go.mod)
+[![Terraform](https://img.shields.io/badge/Terraform-%3E%3D1.0-7B42BC?style=for-the-badge&logo=terraform&logoColor=white)](#installation)
+[![CheckMK](https://img.shields.io/badge/CheckMK-2.2%20%E2%80%93%202.5-15D1A0?style=for-the-badge&logo=checkmk&logoColor=white)](#version-compatibility)
+[![MPL 2.0](https://img.shields.io/badge/License-MPL--2.0-808080?style=for-the-badge)](LICENSE)
 
+<br/>
+
+<!-- status row: purple accent -->
+[![CI](https://img.shields.io/github/actions/workflow/status/withakedo/terraform-provider-checkmk/test.yml?branch=main&label=CI&style=flat-square&color=9333EA&logo=githubactions&logoColor=white)](https://github.com/withakedo/terraform-provider-checkmk/actions/workflows/test.yml)
+[![Latest Release](https://img.shields.io/github/v/release/withakedo/terraform-provider-checkmk?style=flat-square&color=7C3AED&label=release)](https://github.com/withakedo/terraform-provider-checkmk/releases)
 [![Registry](https://img.shields.io/badge/registry-withakedo%2Fcheckmk-7C3AED?style=flat-square&logo=terraform&logoColor=white)](https://registry.terraform.io/providers/withakedo/checkmk)
-![GitHub last commit](https://img.shields.io/github/last-commit/withakedo/terraform-provider-checkmk?style=flat-square&color=9333EA)
-![GitHub issues](https://img.shields.io/github/issues/withakedo/terraform-provider-checkmk?style=flat-square&color=7C3AED)
-![GitHub stars](https://img.shields.io/github/stars/withakedo/terraform-provider-checkmk?style=flat-square&color=9333EA)
+![Last commit](https://img.shields.io/github/last-commit/withakedo/terraform-provider-checkmk?style=flat-square&color=9333EA)
+![Issues](https://img.shields.io/github/issues/withakedo/terraform-provider-checkmk?style=flat-square&color=4C1D95)
 
-**Manage hosts, folders, users, rules, BI aggregations, and distributed monitoring — all as Terraform state.**
+<p><b>Manage hosts, folders, users, rules, BI aggregations, and distributed monitoring — all as Terraform state.</b></p>
 
-[Features](#features) • [Quick Start](#quick-start) • [Resources](#resources) • [Compatibility](#version-compatibility) • [Development](#development)
+<p>
+<a href="#features"><img src="https://img.shields.io/badge/-Features-1a1a2e?style=flat-square" /></a>
+<a href="#architecture"><img src="https://img.shields.io/badge/-Architecture-1a1a2e?style=flat-square" /></a>
+<a href="#quick-start"><img src="https://img.shields.io/badge/-Quick_Start-1a1a2e?style=flat-square" /></a>
+<a href="#resources"><img src="https://img.shields.io/badge/-Resources-1a1a2e?style=flat-square" /></a>
+<a href="#version-compatibility"><img src="https://img.shields.io/badge/-Compatibility-1a1a2e?style=flat-square" /></a>
+<a href="#development"><img src="https://img.shields.io/badge/-Development-1a1a2e?style=flat-square" /></a>
+</p>
 
 </div>
 
@@ -35,38 +46,45 @@
 
 <table>
 <tr>
-<td width="50%" valign="top">
+<td width="33%" valign="top">
 
-### Core
-- **Full CRUD** for hosts, folders, users, rules, and more
-- **Version-aware API handling** — auto-adapts to CheckMK 2.2.x → 2.5.x
-- **OpenAPI-driven type safety** — validation from real CheckMK schemas
-- **Plan-time validation** — bad field/enum values fail at `plan`, not `apply`
-- **Optimistic locking** — ETag-based concurrency control
+**Type Safety**
+- OpenAPI-driven validation from real CheckMK schemas
+- Plan-time checks — bad field/enum values fail at `plan`, not `apply`
+- Version-aware handling across CheckMK 2.2.x → 2.5.x
+- Falls back gracefully to `hollow` mode on unknown versions
 
 </td>
-<td width="50%" valign="top">
+<td width="33%" valign="top">
 
-### Operations
-- **Flexible activation** — auto-activate or batch via explicit resources
-- **Import support** — bring existing config under Terraform
-- **Bulk host ops** — `checkmk_hosts_bulk`: 1 API call for many hosts
-- **Distributed monitoring** — manage remote site connections
-- **Business Intelligence** — BI health-status rollups as code
+**Safe Concurrency**
+- ETag-based optimistic locking on every write
+- Serialized activation calls — no more concurrent-apply `423` errors
+- Real polling for activation completion, not fire-and-forget
+- Full CRUD for hosts, folders, users, rules, and more
+
+</td>
+<td width="33%" valign="top">
+
+**Operate at Scale**
+- `checkmk_hosts_bulk` — 1 API call for many hosts instead of N
+- Distributed monitoring via `checkmk_site_connection`
+- Business Intelligence rollups via `checkmk_bi_aggregation`
+- Import support to bring existing config under Terraform
 
 </td>
 </tr>
 </table>
 
 <details>
-<summary><b>Related Projects</b></summary>
+<summary><b>Related projects</b></summary>
 <br/>
 
 This provider uses generated types from a companion repository:
 
 | Repository | Purpose |
 |------------|---------|
-| [checkmk-api-spec](https://github.com/BlackMesaLTD/checkmk-api-spec) | OpenAPI specs and generated Go types for CheckMK REST API |
+| [checkmk-api-spec](https://github.com/BlackMesaLTD/checkmk-api-spec) | OpenAPI specs and generated Go types for the CheckMK REST API |
 
 `checkmk-api-spec` provides:
 - **42 baseline packages** covering all API variations across CheckMK versions
@@ -75,6 +93,53 @@ This provider uses generated types from a companion repository:
 - **Union descriptions** — merged field documentation with version annotations
 
 </details>
+
+<div align="right"><a href="#top">↑ back to top</a></div>
+
+<br/>
+
+## Architecture
+
+```mermaid
+flowchart LR
+    A["*.tf config"] -->|plan / apply| B["Terraform Core"]
+    B <-->|gRPC| C["terraform-provider-checkmk"]
+    C -->|version detect| D["checkmk-api-spec\ntypes"]
+    C <-->|REST + ETag locking| E["CheckMK REST API"]
+    E --> F[("CheckMK Site\nhosts · rules · BI · users")]
+
+    style C fill:#7C3AED,stroke:#4C1D95,color:#fff
+    style D fill:#1a1a2e,stroke:#7C3AED,color:#fff
+    style E fill:#15D1A0,stroke:#0f9d7a,color:#fff
+```
+
+<details>
+<summary><b>How an <code>apply</code> reaches CheckMK</b></summary>
+<br/>
+
+```mermaid
+sequenceDiagram
+    participant TF as Terraform
+    participant P as checkmk provider
+    participant CMK as CheckMK REST API
+
+    TF->>P: apply checkmk_host, checkmk_rule ...
+    P->>CMK: create / update (If-Match: ETag)
+    CMK-->>P: 200 OK + new ETag
+    P->>CMK: PUT activate-changes
+    CMK-->>P: activation id
+    loop poll until complete
+        P->>CMK: GET activation status
+    end
+    CMK-->>P: COMPLETED
+    P-->>TF: apply complete
+```
+
+Activation calls are serialized provider-side, so concurrent `checkmk_activation` resources queue up instead of racing into CheckMK's `423 Locked` response.
+
+</details>
+
+<div align="right"><a href="#top">↑ back to top</a></div>
 
 <br/>
 
@@ -134,6 +199,8 @@ provider "checkmk" {
 
 > [!TIP]
 > Environment variables are also supported: `CHECKMK_URL`, `CHECKMK_USERNAME`, `CHECKMK_PASSWORD`
+
+<div align="right"><a href="#top">↑ back to top</a></div>
 
 <br/>
 
@@ -257,6 +324,8 @@ provider "checkmk" {
 
 </details>
 
+<div align="right"><a href="#top">↑ back to top</a></div>
+
 <br/>
 
 ## Quick Start
@@ -324,6 +393,8 @@ resource "checkmk_activation" "deploy" {
   }
 }
 ```
+
+<div align="right"><a href="#top">↑ back to top</a></div>
 
 <br/>
 
@@ -397,9 +468,15 @@ The provider automatically detects the CheckMK version and adjusts API calls acc
 
 </details>
 
+<div align="right"><a href="#top">↑ back to top</a></div>
+
 <br/>
 
 ## Development
+
+<p>
+<img src="https://skillicons.dev/icons?i=go,terraform,git,githubactions,docker&theme=dark" alt="tech stack" />
+</p>
 
 ### Building
 
@@ -435,16 +512,18 @@ provider_installation {
 EOF
 ```
 
+<div align="right"><a href="#top">↑ back to top</a></div>
+
 <br/>
 
 ## Documentation
 
 | | |
 |---|---|
-| [CHANGELOG](CHANGELOG.md) — notable changes to this provider |
-| [CheckMK REST API Documentation](https://docs.checkmk.com/latest/en/rest_api.html) |
-| [Terraform Plugin Framework](https://developer.hashicorp.com/terraform/plugin/framework) |
-| [checkmk-api-spec Repository](https://github.com/BlackMesaLTD/checkmk-api-spec) — Generated types and version mappings |
+| [CHANGELOG](CHANGELOG.md) | Notable changes to this provider |
+| [CheckMK REST API Documentation](https://docs.checkmk.com/latest/en/rest_api.html) | Upstream API reference |
+| [Terraform Plugin Framework](https://developer.hashicorp.com/terraform/plugin/framework) | Framework this provider is built on |
+| [checkmk-api-spec Repository](https://github.com/BlackMesaLTD/checkmk-api-spec) | Generated types and version mappings |
 
 <br/>
 
@@ -456,6 +535,12 @@ This project is licensed under the **Mozilla Public License 2.0** — see the [L
 
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:9333ea,100:4c1d95&height=100&section=footer" width="100%" alt="footer" />
+<a href="https://github.com/withakedo/terraform-provider-checkmk/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=withakedo/terraform-provider-checkmk" alt="contributors" />
+</a>
+
+<br/><br/>
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:9333ea,50:7c3aed,100:4c1d95&height=110&section=footer" width="100%" alt="footer" />
 
 </div>
