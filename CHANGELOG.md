@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- **`checkmk_service_label_rules`** - this typed rule wrapper duplicated `checkmk_service_labels`: both
+  wrapped the same `service_label_rules` CheckMK ruleset with an identical schema (`id`, `api_id`,
+  `folder`, a string map, `properties`, `conditions`). `checkmk_service_labels` additionally validates
+  against the circular label-condition dependency, which `checkmk_service_label_rules` never did, and
+  there was no `checkmk_host_label_rules` counterpart - confirming the wrapper was an unintentional
+  duplicate rather than a deliberate second interface. If you have `checkmk_service_label_rules`
+  resources in state, migrate them to `checkmk_service_labels` (rename the `value` attribute to
+  `labels`) and re-import, or run `terraform state mv` after adjusting the resource type in config.
+
 ## [1.4.2] - 2026-08-24
 
 ### Fixed
