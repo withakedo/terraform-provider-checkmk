@@ -126,34 +126,6 @@ func NewCustomServiceAttributesResource() resource.Resource {
 	}
 }
 
-// ServiceLabelRulesResource is a typed wrapper for service_label_rules.
-type ServiceLabelRulesResource struct {
-	BaseRuleWrapper
-}
-
-// NewServiceLabelRulesResource creates a new service label rules resource.
-func NewServiceLabelRulesResource() resource.Resource {
-	return &ServiceLabelRulesResource{
-		BaseRuleWrapper: BaseRuleWrapper{
-			Config: RuleWrapperConfig{
-				Ruleset:       "service_label_rules",
-				TypeName:      "service_label_rules",
-				ValueAttrName: "value",
-				Description: "Sets labels for services matching specified conditions. " +
-					"This is a typed wrapper around the `service_label_rules` ruleset. " +
-					"Requires activation.",
-				ValueSchema: schema.MapAttribute{
-					MarkdownDescription: "Map of label names to values to assign to matching services.",
-					Required:            true,
-					ElementType:         types.StringType,
-				},
-				ToValueRaw:   mapToPythonDict,
-				FromValueRaw: pythonDictToMap,
-			},
-		},
-	}
-}
-
 // Conversion helpers for map types
 
 // mapToPythonDict converts a map of strings to Python dict format.

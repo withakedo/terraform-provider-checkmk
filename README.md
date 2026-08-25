@@ -254,7 +254,7 @@ provider "checkmk" {
 </details>
 
 <details>
-<summary><b>Rule Wrappers</b> <i>(typed, simplified interfaces for common rule types — 27 total)</i></summary>
+<summary><b>Rule Wrappers</b> <i>(typed, simplified interfaces for common rule types — 26 total)</i></summary>
 
 **Hosts**
 
@@ -290,7 +290,6 @@ provider "checkmk" {
 | `checkmk_service_notifications_enabled` | Enables or disables notifications for services |
 | `checkmk_service_flap_detection_enabled` | Enables or disables flap detection for services |
 | `checkmk_custom_service_attributes` | Custom attributes for services |
-| `checkmk_service_label_rules` | Typed wrapper for service label assignment rules |
 
 **Agent Configuration**
 

@@ -47,7 +47,6 @@ func AllResources() []func() resource.Resource {
 		NewServicePassiveChecksEnabledResource,
 		NewServiceProcessPerfDataResource,
 		NewCustomServiceAttributesResource,
-		NewServiceLabelRulesResource,
 
 		// Agent configuration (agent_config.go)
 		NewAgentConfigMRPEResource,
