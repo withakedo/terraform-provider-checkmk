@@ -10,6 +10,7 @@ import (
 	"math/rand"
 	"net/http"
 	"net/url"
+	"sync"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -33,6 +34,20 @@ type Client struct {
 	// cut short by the general-purpose request_timeout. Defaults to 30
 	// minutes if unset.
 	LongOperationTimeout time.Duration
+
+	// activationMu serializes ActivateChanges calls within this process.
+	// Terraform runs resource operations concurrently (parallelism 10 by
+	// default); with activate = "auto", every resource create/update/delete
+	// triggers its own activation independently. Without this lock, two
+	// goroutines can call CheckMK's activate-changes endpoint at the same
+	// moment, and CheckMK responds 423 Locked ("There is already an
+	// activation running") to every caller but the first - failing an
+	// otherwise-successful apply. Serializing means only one activation is
+	// ever in flight from this provider; since CheckMK activates ALL
+	// pending changes (not just the triggering resource's), a goroutine
+	// that acquires the lock after another has just activated typically
+	// finds nothing left to do (422, already handled as success).
+	activationMu sync.Mutex
 }
 
 // longPollClient returns an http.Client bounded by LongOperationTimeout

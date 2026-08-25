@@ -41,7 +41,59 @@ type ActivationResponse struct {
 // finishes, rather than guessing a fixed sleep duration that may be too
 // short (stale reads) or too long (slow applies) for the actual activation
 // time.
+//
+// Calls are serialized within this process via activationMu (see its
+// docstring) so that Terraform's concurrent resource operations under
+// activate = "auto" don't collide on CheckMK's own activation lock. If
+// CheckMK still reports 423 Locked - e.g. a human activated changes in the
+// UI, or another terraform apply is running against the same site - this
+// retries with backoff a few times before giving up, since that lock is
+// typically held only for the duration of one activation cycle.
 func (c *Client) ActivateChanges(ctx context.Context, sites []string, forceForeignChanges bool, strictResourceLocking bool, waitTime int) error {
+	c.activationMu.Lock()
+	defer c.activationMu.Unlock()
+
+	const maxLockedRetries = 5
+	lockedWait := 2 * time.Second
+
+	for attempt := 0; ; attempt++ {
+		activated, err := c.triggerAndWaitForActivation(ctx, sites, forceForeignChanges, strictResourceLocking)
+		if err == nil {
+			if activated && waitTime > 0 {
+				// Extra margin for eventual consistency in other API reads,
+				// on top of activation genuinely having completed.
+				select {
+				case <-time.After(time.Duration(waitTime) * time.Second):
+				case <-ctx.Done():
+					return ctx.Err()
+				}
+			}
+			return nil
+		}
+
+		apiErr, ok := err.(*APIError)
+		if !ok || apiErr.Status != http.StatusLocked || attempt >= maxLockedRetries {
+			return err
+		}
+
+		// Another activation (outside this process, or outside our lock -
+		// e.g. triggered manually in the CheckMK UI) is still running.
+		select {
+		case <-time.After(lockedWait):
+		case <-ctx.Done():
+			return ctx.Err()
+		}
+		if lockedWait < 30*time.Second {
+			lockedWait *= 2
+		}
+	}
+}
+
+// triggerAndWaitForActivation performs a single activate-changes attempt:
+// trigger, then poll for completion. Returns activated=true if it actually
+// triggered and waited out an activation (as opposed to finding nothing
+// pending).
+func (c *Client) triggerAndWaitForActivation(ctx context.Context, sites []string, forceForeignChanges bool, strictResourceLocking bool) (bool, error) {
 	req := &ActivationRequest{
 		Sites:         sites,
 		ForceActivate: forceForeignChanges,
@@ -53,20 +105,23 @@ func (c *Client) ActivateChanges(ctx context.Context, sites []string, forceForei
 		var err error
 		etag, err = c.getPendingChangesETag(ctx)
 		if err != nil {
-			return fmt.Errorf("failed to fetch pending changes ETag for strict activation locking: %w", err)
+			return false, fmt.Errorf("failed to fetch pending changes ETag for strict activation locking: %w", err)
 		}
 	}
 	headers := BuildETagHeaders(etag)
 
 	resp, err := c.requestWithHeaders(ctx, "POST", "/domain-types/activation_run/actions/activate-changes/invoke", req, headers)
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	// Handle 422 Unprocessable Entity (no changes to activate)
 	if resp.StatusCode == http.StatusUnprocessableEntity {
-		// No changes to activate is not an error
-		return nil
+		resp.Body.Close()
+		// No changes to activate is not an error - most likely another
+		// goroutine in this process already activated them while this one
+		// waited for the lock.
+		return false, nil
 	}
 
 	// Under strict locking, a 412 means the set of pending changes shifted
@@ -75,32 +130,23 @@ func (c *Client) ActivateChanges(ctx context.Context, sites []string, forceForei
 	// API error.
 	if driftErr := HandlePreconditionFailed(resp, "Activation", "pending changes"); driftErr != nil {
 		resp.Body.Close()
-		return driftErr
+		return false, driftErr
 	}
 
-	// Just check that the request succeeded
+	// Just check that the request succeeded (this also surfaces 423 Locked
+	// as an *APIError, which ActivateChanges retries on).
 	var activation ActivationResponse
 	if err := c.handleResponse(resp, &activation); err != nil {
-		return err
+		return false, err
 	}
 
 	// Activation triggered successfully - CheckMK processes it asynchronously.
 	// Poll until it actually completes instead of guessing a fixed sleep.
 	if err := c.waitForActivationCompletion(ctx, activation.ID); err != nil {
-		return err
+		return false, err
 	}
 
-	// Extra margin for eventual consistency in other API reads, on top of
-	// activation genuinely having completed.
-	if waitTime > 0 {
-		select {
-		case <-time.After(time.Duration(waitTime) * time.Second):
-		case <-ctx.Done():
-			return ctx.Err()
-		}
-	}
-
-	return nil
+	return true, nil
 }
 
 // getPendingChangesETag fetches the ETag identifying the current set of

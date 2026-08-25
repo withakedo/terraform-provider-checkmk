@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.2] - 2026-08-24
+
+### Fixed
+
+- **Concurrent `activate = "auto"` activations colliding.** Terraform runs resource operations
+  concurrently (parallelism 10 by default); every resource with `activate = "auto"` (or an
+  explicit `checkmk_activation`) triggers its own activation independently. Without coordination,
+  two goroutines could call CheckMK's activate-changes endpoint at the same moment; CheckMK
+  responds `423 Locked` ("There is already an activation running") to every caller but the first,
+  which the provider surfaced as a hard error - failing an otherwise-successful apply even though
+  the underlying resources (e.g. a folder and a host created in the same apply) were created fine.
+  `ActivateChanges` now serializes within the provider process via a mutex, so only one activation
+  is ever in flight; a `423` from outside the process (a human activating in the CheckMK UI, or a
+  concurrent `terraform apply`) is now retried with backoff (up to 5 attempts) instead of failing
+  immediately.
+
 ## [1.4.1] - 2026-08-24
 
 ### Fixed
