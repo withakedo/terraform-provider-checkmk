@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.3] - 2026-08-25
+
 ### Removed
 
 - **`checkmk_service_label_rules`** - this typed rule wrapper duplicated `checkmk_service_labels`: both
@@ -17,6 +19,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   duplicate rather than a deliberate second interface. If you have `checkmk_service_label_rules`
   resources in state, migrate them to `checkmk_service_labels` (rename the `value` attribute to
   `labels`) and re-import, or run `terraform state mv` after adjusting the resource type in config.
+
+### Changed
+
+- **README overhaul.** Restyled with a purple accent theme while keeping official brand colors for
+  the Go, Terraform, and CheckMK badges; added a Mermaid architecture diagram and an apply/activate
+  sequence diagram (both render natively on GitHub, no external hosting); added a real CI status
+  badge wired to the `test.yml` workflow, a skillicons tech-stack row, and a contrib.rocks
+  contributor widget; added per-section "back to top" links; documented all 27 (now 26) typed rule
+  wrapper resources in the Resources table instead of just 10 - 17 existing resources
+  (notification toggles/delays/intervals, check-period wrappers, custom service attributes, the
+  MRPE agent config wrapper) had shipped without ever being listed in the README.
 
 ## [1.4.2] - 2026-08-24
 
