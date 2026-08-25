@@ -47,16 +47,29 @@ type ActivationResponse struct {
 // activate = "auto" don't collide on CheckMK's own activation lock. If
 // CheckMK still reports 423 Locked - e.g. a human activated changes in the
 // UI, or another terraform apply is running against the same site - this
-// retries with backoff a few times before giving up, since that lock is
-// typically held only for the duration of one activation cycle.
+// waits (with growing backoff, capped at 30s between attempts) for that
+// activation to finish and then retries, rather than giving up after a
+// fixed number of attempts: a large foreign activation can legitimately
+// take longer than a short retry budget allows, and failing the apply over
+// a lock that was about to clear on its own just forces a re-run. The wait
+// is bounded by LongOperationTimeout (default 30 minutes), the same budget
+// already used for polling CheckMK's own "wait for completion" endpoints,
+// so a genuinely stuck lock still surfaces as an error instead of hanging
+// forever.
 func (c *Client) ActivateChanges(ctx context.Context, sites []string, forceForeignChanges bool, strictResourceLocking bool, waitTime int) error {
 	c.activationMu.Lock()
 	defer c.activationMu.Unlock()
 
-	const maxLockedRetries = 5
+	longOpTimeout := c.LongOperationTimeout
+	if longOpTimeout <= 0 {
+		longOpTimeout = 30 * time.Minute
+	}
+	ctx, cancel := context.WithTimeout(ctx, longOpTimeout)
+	defer cancel()
+
 	lockedWait := 2 * time.Second
 
-	for attempt := 0; ; attempt++ {
+	for {
 		activated, err := c.triggerAndWaitForActivation(ctx, sites, forceForeignChanges, strictResourceLocking)
 		if err == nil {
 			if activated && waitTime > 0 {
@@ -72,16 +85,18 @@ func (c *Client) ActivateChanges(ctx context.Context, sites []string, forceForei
 		}
 
 		apiErr, ok := err.(*APIError)
-		if !ok || apiErr.Status != http.StatusLocked || attempt >= maxLockedRetries {
+		if !ok || apiErr.Status != http.StatusLocked {
 			return err
 		}
 
 		// Another activation (outside this process, or outside our lock -
-		// e.g. triggered manually in the CheckMK UI) is still running.
+		// e.g. triggered manually in the CheckMK UI) is still running. Wait
+		// for it to finish rather than failing: ctx (bounded by
+		// LongOperationTimeout above) is what eventually gives up.
 		select {
 		case <-time.After(lockedWait):
 		case <-ctx.Done():
-			return ctx.Err()
+			return fmt.Errorf("timed out after %s waiting for a foreign CheckMK activation to finish: %w", longOpTimeout, ctx.Err())
 		}
 		if lockedWait < 30*time.Second {
 			lockedWait *= 2

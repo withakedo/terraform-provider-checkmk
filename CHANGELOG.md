@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Activation gave up too early on a foreign `423 Locked`.** When CheckMK reports that
+  another activation is already running (a human activating in the UI, or another
+  `terraform apply` against the same site), `ActivateChanges` retried with backoff but only
+  for 5 attempts (~60-90s total) before failing the apply. A foreign activation that
+  legitimately takes longer than that - a large one, or a slow site - failed applies that
+  would have succeeded on their own once the lock cleared. It now keeps waiting and retrying
+  until the foreign activation finishes, bounded only by `long_operation_timeout` (default 30
+  minutes, the same budget already used for polling CheckMK's own "wait for completion"
+  endpoints) instead of a fixed attempt count.
+
 ## [1.4.3] - 2026-08-25
 
 ### Removed
